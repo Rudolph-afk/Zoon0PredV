@@ -1,0 +1,5 @@
+data/virus_host_4rm_untitled.csv filter=lfs diff=lfs merge=lfs -text
+data/virushostdb.tsv filter=lfs diff=lfs merge=lfs -text
+data/sequences.csv filter=lfs diff=lfs merge=lfs -text
+data/uniprot-keyword[[:space:]]Virus+entry+into+host+cell+[KW-1160][[:space:]]+fragment[[:space:]]no.fasta filter=lfs diff=lfs merge=lfs -text
+data/uniprot-keyword[[:space:]]Virus+entry+into+host+cell+[KW-1160][[:space:]]+fragment[[:space:]]no.tab.gz filter=lfs diff=lfs merge=lfs -text
