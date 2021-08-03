@@ -1,0 +1,333 @@
+Aug-03 22:21:06.901 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf -with-singularity -with-report
+Aug-03 22:21:07.007 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.04.1
+Aug-03 22:21:07.037 [main] INFO  nextflow.cli.CmdRun - Launching `main.nf` [hungry_yalow] - revision: b0ae3f34db
+Aug-03 22:21:07.052 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/campbell/Documents/Rudolph/nextflow.config
+Aug-03 22:21:07.053 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/campbell/Documents/Rudolph/nextflow.config
+Aug-03 22:21:07.076 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Aug-03 22:21:08.085 [main] DEBUG nextflow.config.ConfigBuilder - Enabling execution in Singularity container as requested by cli option `-with-singularity null`
+Aug-03 22:21:08.100 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/campbell/.nextflow/plugins
+Aug-03 22:21:08.101 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Aug-03 22:21:08.103 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins local root: .nextflow/plr/empty
+Aug-03 22:21:08.111 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Aug-03 22:21:08.112 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Aug-03 22:21:08.116 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Aug-03 22:21:08.125 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Aug-03 22:21:08.170 [main] DEBUG nextflow.Session - Session uuid: a249e1a8-ff1e-4d1b-ba6a-224f5ca837b8
+Aug-03 22:21:08.170 [main] DEBUG nextflow.Session - Run name: hungry_yalow
+Aug-03 22:21:08.170 [main] DEBUG nextflow.Session - Executor pool size: 8
+Aug-03 22:21:08.189 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.04.1 build 5556
+  Created: 14-05-2021 15:20 UTC (17:20 SAST)
+  System: Linux 4.15.0-142-generic
+  Runtime: Groovy 3.0.7 on OpenJDK 64-Bit Server VM 1.8.0_292-8u292-b10-0ubuntu1~16.04.1-b10
+  Encoding: UTF-8 (UTF-8)
+  Process: 4197@station [127.0.1.1]
+  CPUs: 8 - Mem: 31.4 GB (24.3 GB) - Swap: 32 GB (32 GB)
+Aug-03 22:21:08.212 [main] DEBUG nextflow.Session - Work-dir: /home/campbell/Documents/Rudolph/work [ext2/ext3]
+Aug-03 22:21:08.233 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Aug-03 22:21:08.244 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Aug-03 22:21:08.393 [main] DEBUG nextflow.Session - Session start invoked
+Aug-03 22:21:08.756 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Aug-03 22:21:09.189 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: ModelTraining, MoveCGRImages, ChaosGameRepresentation, PrepData
+Aug-03 22:21:09.258 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:with_cpus` matches label `with_cpus` for process with name PrepData
+Aug-03 22:21:09.269 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Aug-03 22:21:09.269 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Aug-03 22:21:09.275 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Aug-03 22:21:09.281 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=8; memory=31.4 GB; capacity=8; pollInterval=100ms; dumpInterval=5m
+Aug-03 22:21:09.407 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:with_cpus` matches label `with_cpus` for process with name ChaosGameRepresentation
+Aug-03 22:21:09.409 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Aug-03 22:21:09.409 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Aug-03 22:21:09.430 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withLabel:with_gpus` matches label `with_gpus` for process with name ModelTraining
+Aug-03 22:21:09.431 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Aug-03 22:21:09.432 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Aug-03 22:21:09.435 [main] DEBUG nextflow.Session - Ignite dataflow network (8)
+Aug-03 22:21:09.445 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > PrepData
+Aug-03 22:21:09.446 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ChaosGameRepresentation
+Aug-03 22:21:09.446 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > ModelTraining
+Aug-03 22:21:09.446 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Aug-03 22:21:09.446 [main] DEBUG nextflow.Session - Session await
+Aug-03 22:21:09.623 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-03 22:21:09.628 [Task submitter] INFO  nextflow.Session - [0e/8f562e] Submitted process > PrepData (1)
+Aug-03 22:24:45.757 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: PrepData (1); status: COMPLETED; exit: 0; error: -; workDir: /home/campbell/Documents/Rudolph/work/0e/8f562e5c00811537e95692d2f034cd]
+Aug-03 22:24:45.951 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-03 22:24:45.953 [Task submitter] INFO  nextflow.Session - [3e/d5a323] Submitted process > ChaosGameRepresentation (1)
+Aug-03 22:26:09.455 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 2; name: ChaosGameRepresentation (1); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3e/d5a323f5b301b29513656d98e8cfe3]
+Aug-03 22:29:46.083 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 4; name: ChaosGameRepresentation (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/87/db9e1e324e5a48860a97c50bd1a61f]
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-03 22:31:09.490 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 2; name: ChaosGameRepresentation (1); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3e/d5a323f5b301b29513656d98e8cfe3]
+Aug-03 22:31:54.259 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: ChaosGameRepresentation (1); status: COMPLETED; exit: 0; error: -; workDir: /home/campbell/Documents/Rudolph/work/3e/d5a323f5b301b29513656d98e8cfe3]
+Aug-03 22:31:54.270 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-03 22:31:54.276 [Task submitter] INFO  nextflow.Session - [87/db9e1e] Submitted process > ChaosGameRepresentation (3)
+Aug-03 22:34:46.325 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+Aug-03 22:36:09.523 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 4; name: ChaosGameRepresentation (3); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/87/db9e1e324e5a48860a97c50bd1a61f]
+Aug-03 22:36:54.111 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: ChaosGameRepresentation (3); status: COMPLETED; exit: 0; error: -; workDir: /home/campbell/Documents/Rudolph/work/87/db9e1e324e5a48860a97c50bd1a61f]
+Aug-03 22:36:54.120 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-03 22:36:54.121 [Task submitter] INFO  nextflow.Session - [3c/f895dc] Submitted process > ChaosGameRepresentation (2)
+Aug-03 22:39:47.161 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+Aug-03 22:41:09.579 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+Aug-03 22:44:47.225 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+Aug-03 22:46:09.589 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+Aug-03 22:49:47.292 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+Aug-03 22:51:09.668 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+Aug-03 22:54:47.359 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+Aug-03 22:56:09.695 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+Aug-03 22:59:47.414 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+Aug-03 23:01:09.706 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+Aug-03 23:04:47.490 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+Aug-03 23:06:09.761 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+Aug-03 23:09:47.546 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+Aug-03 23:11:09.788 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+Aug-03 23:11:47.717 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: ChaosGameRepresentation (2); status: COMPLETED; exit: 0; error: -; workDir: /home/campbell/Documents/Rudolph/work/3c/f895dccfd5be0a849b2e0e58577990]
+Aug-03 23:11:47.724 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-03 23:11:47.725 [Task submitter] INFO  nextflow.Session - [b7/d7b95e] Submitted process > ChaosGameRepresentation (4)
+Aug-03 23:14:47.764 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+Aug-03 23:16:09.832 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+Aug-03 23:18:00.966 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: ChaosGameRepresentation (4); status: COMPLETED; exit: 0; error: -; workDir: /home/campbell/Documents/Rudolph/work/b7/d7b95ebb8376ffd9490c5142032b3f]
+Aug-03 23:18:00.975 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-03 23:18:00.976 [Task submitter] INFO  nextflow.Session - [fd/c21a3b] Submitted process > ChaosGameRepresentation (5)
+Aug-03 23:19:48.043 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+Aug-03 23:21:09.880 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+Aug-03 23:24:48.131 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+Aug-03 23:26:09.976 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+Aug-03 23:29:48.201 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+Aug-03 23:31:10.004 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+Aug-03 23:34:48.250 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+Aug-03 23:36:10.045 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+Aug-03 23:39:48.304 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+Aug-03 23:41:10.137 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+Aug-03 23:41:53.366 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: ChaosGameRepresentation (5); status: COMPLETED; exit: 0; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/c21a3b1fcc0a6837c112765038c71b]
+Aug-03 23:41:53.372 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-03 23:41:53.373 [Task submitter] INFO  nextflow.Session - [b5/44c723] Submitted process > ChaosGameRepresentation (6)
+Aug-03 23:44:48.411 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-03 23:46:10.182 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-03 23:49:48.475 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-03 23:51:10.241 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-03 23:54:48.519 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-03 23:56:10.247 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-03 23:59:48.567 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-04 00:01:10.331 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-04 00:04:48.609 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-04 00:06:10.383 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-04 00:09:48.654 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-04 00:11:10.392 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-04 00:14:48.698 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-04 00:16:10.478 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-04 00:19:48.752 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-04 00:21:10.525 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-04 00:24:48.794 [Task submitter] DEBUG n.processor.TaskPollingMonitor - %% executor local > tasks in the submission queue: 5 -- tasks to be submitted are shown below
+~> TaskHandler[id: 8; name: ModelTraining (1); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+~> TaskHandler[id: 9; name: ModelTraining (2); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+~> TaskHandler[id: 10; name: ModelTraining (3); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+~> TaskHandler[id: 11; name: ModelTraining (4); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+~> TaskHandler[id: 12; name: ModelTraining (5); status: NEW; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-04 00:26:10.623 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: RUNNING; exit: -; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-04 00:28:23.013 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: ChaosGameRepresentation (6); status: COMPLETED; exit: 0; error: -; workDir: /home/campbell/Documents/Rudolph/work/b5/44c7233e9b90774093f96b6e290cff]
+Aug-04 00:28:23.024 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-04 00:28:23.024 [Task submitter] INFO  nextflow.Session - [d3/2b46b2] Submitted process > ModelTraining (1)
+Aug-04 00:28:23.036 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: ModelTraining (1); status: COMPLETED; exit: 1; error: -; workDir: /home/campbell/Documents/Rudolph/work/d3/2b46b26bf853a5e473be5541cc892c]
+Aug-04 00:28:23.039 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-04 00:28:23.039 [Task submitter] INFO  nextflow.Session - [4c/365cac] Submitted process > ModelTraining (2)
+Aug-04 00:28:23.046 [Task monitor] INFO  nextflow.processor.TaskProcessor - [d3/2b46b2] NOTE: Process `ModelTraining (1)` terminated with an error exit status (1) -- Execution is retried (1)
+Aug-04 00:28:23.136 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: ModelTraining (2); status: COMPLETED; exit: 1; error: -; workDir: /home/campbell/Documents/Rudolph/work/4c/365cac65764c1e5cfa4bd8da710d43]
+Aug-04 00:28:23.137 [Task monitor] INFO  nextflow.processor.TaskProcessor - [4c/365cac] NOTE: Process `ModelTraining (2)` terminated with an error exit status (1) -- Execution is retried (1)
+Aug-04 00:28:23.141 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-04 00:28:23.141 [Task submitter] INFO  nextflow.Session - [fd/5a979c] Submitted process > ModelTraining (3)
+Aug-04 00:28:23.149 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: ModelTraining (3); status: COMPLETED; exit: 1; error: -; workDir: /home/campbell/Documents/Rudolph/work/fd/5a979cd9b94a0cf04f91fc1618e808]
+Aug-04 00:28:23.151 [Task monitor] INFO  nextflow.processor.TaskProcessor - [fd/5a979c] NOTE: Process `ModelTraining (3)` terminated with an error exit status (1) -- Execution is retried (1)
+Aug-04 00:28:23.153 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-04 00:28:23.153 [Task submitter] INFO  nextflow.Session - [0b/eeef94] Submitted process > ModelTraining (4)
+Aug-04 00:28:23.163 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: ModelTraining (4); status: COMPLETED; exit: 1; error: -; workDir: /home/campbell/Documents/Rudolph/work/0b/eeef949719ed388d0dcc7de369b000]
+Aug-04 00:28:23.163 [Task monitor] INFO  nextflow.processor.TaskProcessor - [0b/eeef94] NOTE: Process `ModelTraining (4)` terminated with an error exit status (1) -- Execution is retried (1)
+Aug-04 00:28:23.166 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-04 00:28:23.166 [Task submitter] INFO  nextflow.Session - [62/df215e] Submitted process > ModelTraining (5)
+Aug-04 00:28:23.174 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: ModelTraining (5); status: COMPLETED; exit: 1; error: -; workDir: /home/campbell/Documents/Rudolph/work/62/df215ed40c60e31d293bb31b9e9560]
+Aug-04 00:28:23.175 [Task monitor] INFO  nextflow.processor.TaskProcessor - [62/df215e] NOTE: Process `ModelTraining (5)` terminated with an error exit status (1) -- Execution is retried (1)
+Aug-04 00:28:23.178 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-04 00:28:23.178 [Task submitter] INFO  nextflow.Session - [22/e481d3] Submitted process > ModelTraining (6)
+Aug-04 00:28:23.185 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: ModelTraining (6); status: COMPLETED; exit: 1; error: -; workDir: /home/campbell/Documents/Rudolph/work/22/e481d3b3e74b31a3fae3b7ad60f39a]
+Aug-04 00:28:23.186 [Task monitor] INFO  nextflow.processor.TaskProcessor - [22/e481d3] NOTE: Process `ModelTraining (6)` terminated with an error exit status (1) -- Execution is retried (1)
+Aug-04 00:28:23.188 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-04 00:28:23.188 [Task submitter] INFO  nextflow.Session - [ee/848a39] Re-submitted process > ModelTraining (1)
+Aug-04 00:28:23.198 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: ModelTraining (1); status: COMPLETED; exit: 1; error: -; workDir: /home/campbell/Documents/Rudolph/work/ee/848a395f171485312527f4a3e25b4a]
+Aug-04 00:28:23.201 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-04 00:28:23.201 [Task submitter] INFO  nextflow.Session - [a5/119c6a] Re-submitted process > ModelTraining (2)
+Aug-04 00:28:23.203 [Task monitor] DEBUG nextflow.processor.TaskRun - Unable to dump output of process 'null' -- Cause: java.nio.file.NoSuchFileException: /home/campbell/Documents/Rudolph/work/ee/848a395f171485312527f4a3e25b4a/.command.out
+Aug-04 00:28:23.205 [Task monitor] DEBUG nextflow.processor.TaskRun - Unable to dump error of process 'null' -- Cause: java.nio.file.NoSuchFileException: /home/campbell/Documents/Rudolph/work/ee/848a395f171485312527f4a3e25b4a/.command.err
+Aug-04 00:28:23.242 [Task monitor] ERROR nextflow.processor.TaskProcessor - Error executing process > 'ModelTraining (1)'
+
+Caused by:
+  Process `ModelTraining (1)` terminated with an error exit status (1)
+
+Command executed:
+
+  train_zoonosis_model.py -d DNA-MetazoaZoonosisData
+
+Command exit status:
+  1
+
+Command output:
+  (empty)
+
+Command wrapper:
+  .command.run: line 285: activate: No such file or directory
+
+Work dir:
+  /home/campbell/Documents/Rudolph/work/ee/848a395f171485312527f4a3e25b4a
+
+Tip: view the complete command output by changing to the process work dir and entering the command `cat .command.out`
+Aug-04 00:28:23.247 [Task monitor] DEBUG nextflow.Session - Session aborted -- Cause: Process `ModelTraining (1)` terminated with an error exit status (1)
+Aug-04 00:28:23.263 [Task monitor] DEBUG nextflow.processor.TaskRun - Unable to dump error of process 'null' -- Cause: java.nio.file.NoSuchFileException: /home/campbell/Documents/Rudolph/work/ee/848a395f171485312527f4a3e25b4a/.command.err
+Aug-04 00:28:23.264 [Task monitor] DEBUG nextflow.processor.TaskRun - Unable to dump output of process 'null' -- Cause: java.nio.file.NoSuchFileException: /home/campbell/Documents/Rudolph/work/ee/848a395f171485312527f4a3e25b4a/.command.out
+Aug-04 00:28:23.265 [main] DEBUG nextflow.Session - Session await > all process finished
+Aug-04 00:28:23.265 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Aug-04 00:28:23.268 [main] DEBUG nextflow.processor.TaskRun - Unable to dump error of process 'null' -- Cause: java.nio.file.NoSuchFileException: /home/campbell/Documents/Rudolph/work/ee/848a395f171485312527f4a3e25b4a/.command.err
+Aug-04 00:28:23.268 [main] DEBUG nextflow.processor.TaskRun - Unable to dump output of process 'null' -- Cause: java.nio.file.NoSuchFileException: /home/campbell/Documents/Rudolph/work/ee/848a395f171485312527f4a3e25b4a/.command.out
+Aug-04 00:28:23.273 [main] WARN  n.processor.TaskPollingMonitor - Killing pending tasks (1)
+Aug-04 00:28:23.280 [main] DEBUG nextflow.executor.LocalTaskHandler - Unable to kill ModelTraining (2) -- command: kill -TERM 23951; exit: 1 
+ bash: line 0: kill: (23951) - No such process
+
+Aug-04 00:28:23.282 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=7; failedCount=7; ignoredCount=0; cachedCount=0; pendingCount=4; submittedCount=1; runningCount=-1; retriesCount=6; abortedCount=1; succeedDuration=16h 57m 26s; failedDuration=112ms; cachedDuration=0ms;loadCpus=-8; loadMemory=0; peakRunning=1; peakCpus=8; peakMemory=30 GB; ]
+Aug-04 00:28:23.282 [main] DEBUG nextflow.trace.ReportObserver - Flow completing -- rendering html report
+Aug-04 00:28:23.330 [main] DEBUG nextflow.trace.ReportObserver - Execution report summary data:
+  [{"cpuUsage":{"mean":20.75,"min":20.75,"q1":20.75,"q2":20.75,"q3":20.75,"max":20.75,"minLabel":"PrepData (1)","maxLabel":"PrepData (1)","q1Label":"PrepData (1)","q2Label":"PrepData (1)","q3Label":"PrepData (1)"},"process":"PrepData","mem":{"mean":12388401152,"min":12388401152,"q1":12388401152,"q2":12388401152,"q3":12388401152,"max":12388401152,"minLabel":"PrepData (1)","maxLabel":"PrepData (1)","q1Label":"PrepData (1)","q2Label":"PrepData (1)","q3Label":"PrepData (1)"},"memUsage":{"mean":38.46,"min":38.46,"q1":38.46,"q2":38.46,"q3":38.46,"max":38.46,"minLabel":"PrepData (1)","maxLabel":"PrepData (1)","q1Label":"PrepData (1)","q2Label":"PrepData (1)","q3Label":"PrepData (1)"},"timeUsage":null,"vmem":{"mean":13739933696,"min":13739933696,"q1":13739933696,"q2":13739933696,"q3":13739933696,"max":13739933696,"minLabel":"PrepData (1)","maxLabel":"PrepData (1)","q1Label":"PrepData (1)","q2Label":"PrepData (1)","q3Label":"PrepData (1)"},"reads":{"mean":3708824838,"min":3708824838,"q1":3708824838,"q2":3708824838,"q3":3708824838,"max":3708824838,"minLabel":"PrepData (1)","maxLabel":"PrepData (1)","q1Label":"PrepData (1)","q2Label":"PrepData (1)","q3Label":"PrepData (1)"},"cpu":{"mean":166,"min":166,"q1":166,"q2":166,"q3":166,"max":166,"minLabel":"PrepData (1)","maxLabel":"PrepData (1)","q1Label":"PrepData (1)","q2Label":"PrepData (1)","q3Label":"PrepData (1)"},"time":{"mean":215732,"min":215732,"q1":215732,"q2":215732,"q3":215732,"max":215732,"minLabel":"PrepData (1)","maxLabel":"PrepData (1)","q1Label":"PrepData (1)","q2Label":"PrepData (1)","q3Label":"PrepData (1)"},"writes":{"mean":239967807,"min":239967807,"q1":239967807,"q2":239967807,"q3":239967807,"max":239967807,"minLabel":"PrepData (1)","maxLabel":"PrepData (1)","q1Label":"PrepData (1)","q2Label":"PrepData (1)","q3Label":"PrepData (1)"}},{"cpuUsage":{"mean":97.16,"min":96.09,"q1":96.74,"q2":97.12,"q3":97.78,"max":98.03,"minLabel":"ChaosGameRepresentation (3)","maxLabel":"ChaosGameRepresentation (6)","q1Label":"ChaosGameRepresentation (4)","q2Label":"ChaosGameRepresentation (1)","q3Label":"ChaosGameRepresentation (5)"},"process":"ChaosGameRepresentation","mem":{"mean":2399431338.67,"min":1892061184,"q1":1927200768,"q2":2268710912,"q3":2828492800,"max":3138654208,"minLabel":"ChaosGameRepresentation (3)","maxLabel":"ChaosGameRepresentation (6)","q1Label":"ChaosGameRepresentation (4)","q2Label":"ChaosGameRepresentation (1)","q3Label":"ChaosGameRepresentation (5)"},"memUsage":{"mean":7.45,"min":5.87,"q1":5.98,"q2":7.04,"q3":8.78,"max":9.74,"minLabel":"ChaosGameRepresentation (3)","maxLabel":"ChaosGameRepresentation (6)","q1Label":"ChaosGameRepresentation (4)","q2Label":"ChaosGameRepresentation (1)","q3Label":"ChaosGameRepresentation (5)"},"timeUsage":null,"vmem":{"mean":13783117824,"min":13089959936,"q1":13186898944,"q2":13639270400,"q3":14348276736,"max":14709485568,"minLabel":"ChaosGameRepresentation (1)","maxLabel":"ChaosGameRepresentation (6)","q1Label":"ChaosGameRepresentation (4)","q2Label":"ChaosGameRepresentation (3)","q3Label":"ChaosGameRepresentation (5)"},"reads":{"mean":56741104.5,"min":31646232,"q1":32215874.75,"q2":49460291,"q3":77412909.5,"max":96681628,"minLabel":"ChaosGameRepresentation (3)","maxLabel":"ChaosGameRepresentation (6)","q1Label":"ChaosGameRepresentation (1)","q2Label":"ChaosGameRepresentation (4)","q3Label":"ChaosGameRepresentation (5)"},"cpu":{"mean":777.3,"min":768.7,"q1":773.95,"q2":776.95,"q3":782.28,"max":784.2,"minLabel":"ChaosGameRepresentation (3)","maxLabel":"ChaosGameRepresentation (6)","q1Label":"ChaosGameRepresentation (4)","q2Label":"ChaosGameRepresentation (1)","q3Label":"ChaosGameRepresentation (5)"},"time":{"mean":1235843,"min":299540,"q1":386666.75,"q2":930005,"q3":1927972.25,"max":2789326,"minLabel":"ChaosGameRepresentation (3)","maxLabel":"ChaosGameRepresentation (6)","q1Label":"ChaosGameRepresentation (4)","q2Label":"ChaosGameRepresentation (1)","q3Label":"ChaosGameRepresentation (5)"},"writes":{"mean":110113823.5,"min":28428581,"q1":38419616.5,"q2":83151256,"q3":167808409,"max":246415318,"minLabel":"ChaosGameRepresentation (3)","maxLabel":"ChaosGameRepresentation (6)","q1Label":"ChaosGameRepresentation (4)","q2Label":"ChaosGameRepresentation (1)","q3Label":"ChaosGameRepresentation (5)"}},{"cpuUsage":null,"process":"ModelTraining","mem":null,"memUsage":null,"timeUsage":null,"vmem":null,"reads":null,"cpu":null,"time":{"mean":2,"min":2,"q1":2,"q2":2,"q3":2,"max":2,"minLabel":"ModelTraining (1)","maxLabel":"ModelTraining (1)","q1Label":"ModelTraining (2)","q2Label":"ModelTraining (4)","q3Label":"ModelTraining (5)"},"writes":null}]
+Aug-04 00:28:24.081 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Aug-04 00:28:24.089 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
