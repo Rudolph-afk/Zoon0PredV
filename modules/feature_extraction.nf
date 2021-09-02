@@ -2,21 +2,21 @@
 nextflow.enable.dsl=2
 
 process ChaosGameRepresentation {
+    publishDir "${directory}/human-true", mode: params.publish_dir_mode, 
+                enabled: params.save, pattern: "human_true*"
+    publishDir "${directory}/human-false", mode: params.publish_dir_mode, 
+                enabled: params.save, pattern: "human_false*"
 
-    label "with_cpus"
-    cache "lenient"
 
     input:
-        tuple val(parentDir), path(directory), path(FastaFile)
+        tuple val(parentDir), path(directory), path(fastaFile)
 
     output:
-        val "${parentDir}"
+        path "${parentDir}"
 
     script:
         """
-        chaos_game_representation_of_protein_sequences.R --fasta $FastaFile --directory $directory
-        find $directory -name 'human_true*' -type f -exec mv {} $directory/human-true \\;
-        find $directory -name 'human_false*' -type f -exec mv {} $directory/human-false \\;
+        chaos_game_representation_of_protein_sequences.R --fasta ${fastaFile} --directory ${directory}
         """
 }
 

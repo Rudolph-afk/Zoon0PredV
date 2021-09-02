@@ -3,7 +3,8 @@ nextflow.enable.dsl=2
 
 process PrepData {
     // beforeScript source activate tensorEnv
-    label "with_cpus"
+    publishDir params.saveDir, mode: params.publish_dir_mode,
+                enabled: params.save
 
     input:
         path prot

@@ -14,24 +14,24 @@ fasta       = Channel.fromPath(params.fasta,     type: 'file', glob: false)
 
 
 workflow {
-// Outputs directories (MetazoaData etc.) with accompanying data as a list
+    // Outputs directories (MetazoaData etc.) with accompanying data as a list
     dirSplits = PrepData(uniprot, ncbiVirus, eid, virus_db, fasta) 
 
-// Outputs tuples in the form (parentDirectory, subDirectory, FASTAFile)
-    // fcgrTestSplit  = dirSplits
-    //                     .flatten()
-    //                     .map { it -> def split=it; tuple(split, file("${split}/test"), file("${split}/test/*.fasta")) }
+    // Outputs tuples in the form (parentDirectory, subDirectory, FASTAFile)
+    fcgrTestSplit  = dirSplits
+                        .flatten()
+                        .map { it -> def split=it; tuple(split, file("${split}/test"), file("${split}/test/*.fasta")) }
     fcgrTrainSplit = dirSplits
                         .flatten()
                         .map { it -> def split=it; tuple(split, file("${split}/train"), file("${split}/train/*.fasta")) }
     
     // splits_as_vals = dirSplits.flatten().map { it -> def split=it; val(split) }
 
-// Combines the 2 channels to output a single channel emitting the tuples
+    // Combines the 2 channels to output a single channel emitting the tuples
     fCGRData = fcgrTrainSplit
-                    // .mix(fcgrTestSplit)
+                    .mix(fcgrTestSplit)
 
-// Outputs tuples in the form (parentDirectory, subDirectory)
+    // Outputs tuples in the form (parentDirectory, subDirectory)
     fCGR = ChaosGameRepresentation(fCGRData) // fix from here
 
     // fCGR = fCGR.map { it[0] } // Flatten will try to flatten individual output and will not produce desired output

@@ -2,13 +2,11 @@
 nextflow.enable.dsl=2
 
 process ModelTraining {
-    if (params.save) {
-        publishDir "${params.saveDir}", mode: "${params.publish_dir_mode}"
-    }
+    publishDir "${directory}", mode: params.publish_dir_mode,
+                enabled: params.save
 
-    beforeScript "source activate tensorEnv"
-    
-    label "with_gpus" // (params.GPU == "ON" ? "": "with_cpus")
+    // beforeScript "source activate tensorEnv"
+    maxForks 1
     
     input:
         path directory
