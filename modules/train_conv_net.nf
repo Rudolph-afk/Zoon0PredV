@@ -2,17 +2,19 @@
 nextflow.enable.dsl=2
 
 process ModelTraining {
-    publishDir "${directory}", mode: params.publish_dir_mode,
+    
+    publishDir "${params.saveDir}/${directory}", mode: params.publish_dir_mode,
                 enabled: params.save
 
-    // beforeScript "source activate tensorEnv"
-    maxForks 1
+    tag        "${directory}"
+    maxForks   1
     
     input:
-        path directory
+        path   directory
 
     output:
-        path "${directory}"
+        path   "model"
+        path   "*.csv"
     
     script:
         """

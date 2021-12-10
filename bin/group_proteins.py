@@ -1,3 +1,5 @@
+#!/usr/local/bin/python
+
 import argparse
 import pandas as pd
 import swifter

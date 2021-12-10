@@ -1,12 +1,22 @@
-#!/opt/conda/envs/tensorEnv/bin/python
+#!/usr/local/bin/python
+
 import argparse
 import os
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.random import set_seed
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint#, EarlyStopping
+from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint #, EarlyStopping
 # from tensorflow.keras.metrics import Recall, Precision
+from numpy.random import seed
+import tensorflow_addons as tfa
+from tensorflow_addons.metrics import MatthewsCorrelationCoefficient
 # tf.get_logger().setLevel('ERROR')
+
+# Set random state for tensorflow operations (REPRODUCIBILITY)
+set_seed(20192020)
+seed(20192020)
+
 # Set GPU usage and memory growth
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 for device in physical_devices:
@@ -81,21 +91,30 @@ def trainSaveModel(base_dir, train_data_iterator, validation_data_iterator, mode
             keras.layers.Conv2D(48, input_shape=(96,96,1),
                                 kernel_size=(3,3),
                                 activation='relu',
-                                bias_regularizer=tf.keras.regularizers.l2()),
+                                bias_regularizer=keras.regularizers.l2()),
+
             keras.layers.BatchNormalization(),
             keras.layers.Conv2D(48, kernel_size=(3,3), activation='relu',
-                                bias_regularizer=tf.keras.regularizers.l2()),
-            keras.layers.MaxPool2D(pool_size=(2,2), strides=2),
+                                bias_regularizer=keras.regularizers.l2()),
+
+            keras.layers.BatchNormalization(),
+            keras.layers.MaxPool2D(pool_size=(3,3), strides=3),   # (pool_size=(2,2), strides=2),
+
             keras.layers.Dropout(0.2),
+
             keras.layers.Flatten(),
+
             keras.layers.Dense(units=128, activation='relu',
-                            bias_regularizer=tf.keras.regularizers.l2()),
+                            bias_regularizer=keras.regularizers.l2()),
+
             keras.layers.Dense(1, activation='sigmoid',
-                            bias_regularizer=tf.keras.regularizers.l2())
+                            bias_regularizer=keras.regularizers.l2())
         ])
         # Precision and recall should be defined under the same scope as the model
         # precision = Precision()
         # recall = Recall()
+        mcc = MatthewsCorrelationCoefficient(num_classes=2)
+        # model.add_metric()
 
     model.compile(
         loss='binary_crossentropy',
@@ -103,17 +122,19 @@ def trainSaveModel(base_dir, train_data_iterator, validation_data_iterator, mode
         metrics=[
             'accuracy',
             # precision,
-            # recall
+            # recall,
+            mcc
             ])
 
     model.fit(
-        train_data_iterator, 
+        train_data_iterator,
         steps_per_epoch=TRAIN_STEPS,
-        validation_data=validation_data_iterator, 
+        validation_data=validation_data_iterator,
         validation_steps=VALIDATION_STEPS,
         shuffle=True,
-        epochs=30, 
-        verbose=0, 
+        epochs=15,
+        verbose=0,
+        use_multiprocessing=True,
         callbacks=[
             CSVLogger(logs),
             model_checkpoint_callback,
@@ -121,7 +142,7 @@ def trainSaveModel(base_dir, train_data_iterator, validation_data_iterator, mode
             ])
     
     model.load_weights(model_checkpoint)
-    keras.models.save_model(model, os.path.join(base_dir, 'model'))
+    keras.models.save_model(model, 'model') # (model, os.path.join(base_dir, 'model'))
 
 
 def main(base_dir, train, model_checkpoint, logs):
@@ -169,12 +190,12 @@ if __name__ == '__main__':
         train = args.train
 
     if args.model_checkpoint == None:
-        model_checkpoint = os.path.join(base_dir, 'checkpoint.ckpt')
+        model_checkpoint = 'checkpoint.ckpt' # os.path.join(base_dir, 'checkpoint.ckpt')
     else:
         model_checkpoint = args.model
     
     if (args.logs == None):
-        logs = os.path.join(base_dir, 'trainingLogs.csv')
+        logs = 'trainingLogs.csv' # os.path.join(base_dir, 'trainingLogs.csv')
     else:
         logs = args.logs
         

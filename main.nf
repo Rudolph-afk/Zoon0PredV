@@ -1,8 +1,9 @@
-#!/usr/bin/env nextflow
+#!/bin/nextflow
+
 nextflow.enable.dsl=2
 
 include { PrepData } from './modules/extract_transform'
-include { ChaosGameRepresentation; MoveCGRImages } from './modules/feature_extraction'
+include { ChaosGameRepresentation } from './modules/feature_extraction'
 include { ModelTraining } from './modules/train_conv_net'
 
 
@@ -18,29 +19,49 @@ workflow {
     dirSplits = PrepData(uniprot, ncbiVirus, eid, virus_db, fasta) 
 
     // Outputs tuples in the form (parentDirectory, subDirectory, FASTAFile)
-    fcgrTestSplit  = dirSplits
-                        .flatten()
-                        .map { it -> def split=it; tuple(split, file("${split}/test"), file("${split}/test/*.fasta")) }
     fcgrTrainSplit = dirSplits
                         .flatten()
-                        .map { it -> def split=it; tuple(split, file("${split}/train"), file("${split}/train/*.fasta")) }
+                        .map {
+                            it -> def split=it.baseName;
+                            tuple(
+                                split, 
+                                file("${params.saveDir}/${split}/train"),
+                                file("${params.saveDir}/${split}/train/Sequences.fasta")
+                            )
+                        }
     
-    // splits_as_vals = dirSplits.flatten().map { it -> def split=it; val(split) }
+    if (params.test == true) {
+        fcgrTestSplit  = dirSplits
+                            .flatten()
+                            .map {
+                                it -> def split=it.baseName;
+                                tuple(
+                                    split,
+                                    file("${params.saveDir}/${split}/test"),
+                                    file("${params.saveDir}/${split}/test/Sequences.fasta")
+                                )
+                            }
 
     // Combines the 2 channels to output a single channel emitting the tuples
-    fCGRData = fcgrTrainSplit
+        fCGRData = fcgrTrainSplit
                     .mix(fcgrTestSplit)
+    } else {
+        fCGRData = fcgrTrainSplit
+    }
 
     // Outputs tuples in the form (parentDirectory, subDirectory)
-    fCGR = ChaosGameRepresentation(fCGRData) // fix from here
+    ChaosGameRepresentation(fCGRData) // fix from here
 
     // fCGR = fCGR.map { it[0] } // Flatten will try to flatten individual output and will not produce desired output
-    data = fCGR = fCGR.unique()
-                        .map { it -> def dir=it; file(dir) }
+    ChaosGameRepresentation.out[1].flatten()
+                            .unique()
+                            .set{ data }
+                            // .map { it -> def dir=it; path(dir) }
     // fCGRmoved = MoveCGRImages(fCGR)
     
-    // data = fCGRmoved.flatten()
-    //                 .map { it -> def dir=it; file(dir) }
+    data = data
+            .map { it -> def dir=it; file("${params.saveDir}/${dir}") }
+
     ModelTraining(data)
 }
 
