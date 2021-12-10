@@ -1,0 +1,207 @@
+---
+author: Rudolph Serage
+title: Chaos Game Representation testing
+---
+
+## Packages
+
+```{r}
+suppressPackageStartupMessages(c(
+  library(readr),
+  library(dplyr),
+  library(ggpubr),
+  library(protr), # For using the readFASTA function to read fasta files
+  library(kaos), # For genetation of the CGR
+  library(later), # For async programming
+  library(tictoc), # benchmarking code
+  library(foreach), # For parallel computing
+  library(doParallel), # Registration of workers for parallel computing
+  library(stringr)) # For manipulation of strings, especially names of the sequences
+)
+```
+
+## Fasta Sequences
+
+```{r}
+virus_sequences <- readFASTA("Sequences.fasta")
+length(virus_sequences)
+virus_sequences[1:2]
+```
+
+## Preprocessing
+
+```{r}
+remove_slash = function (x) {
+    x = gsub("[[:space:]]", "_", x, fixed = TRUE)
+    x = gsub("|", "_", x, fixed = TRUE)
+    x = gsub("=", "_", x, fixed = TRUE)
+    x = gsub("-", "_", x, fixed = TRUE)
+    result = gsub("/", "_", x, fixed = TRUE)
+    return(result)
+}
+
+seq.names = names(virus_sequences)
+seq.names = unlist(seq.names)
+seq.names = lapply(seq.names, remove_slash)
+
+specify_directory <- function(x) {
+    if (grepl(pattern = "true", x = x)) {
+        new_name <- paste("human-true", x, sep="/")
+    } else {
+        new_name <- paste("human-false", x, sep="/")
+    }
+    return(new_name)
+}
+
+seq.names = lapply(seq.names, specify_directory)
+
+names(virus_sequences) = seq.names
+```
+
+```{r}
+seq.names[1:2]
+```
+
+## Zoonosis dataframe
+
+```{r}
+(suppressMessages({zd <- read_csv("ZoonosisData.csv.gz")}))
+```
+
+## Define CGR function
+
+```{r}
+chaos_game_representation = function (x) {
+  chaos.obj = cgr(str_split(x, '', simplify = T));
+  chaos.plot = with_temp_loop(cgr.plot(chaos.obj, mode = "matrix", corners=T, labels=T))
+  return(chaos.plot)
+}
+
+save_chaos_game_representation <- function (sequence, seq.name) {
+    file_name <- paste(seq.name, ".jpeg", sep="")
+    chaos.graph <- chaos_game_representation(sequence)
+    with_temp_loop({
+      jpeg(file_name, width = 96, height = 96)
+      print(chaos.graph)
+      dev.off()
+      }
+    )
+}
+```
+
+## CGR plot helper functions
+
+```{r}
+get_virus_protein_names <- function(file_name) {
+  entry = str_split(file_name, "_", simplify = TRUE)[3]
+  sp_prot = unlist(zd %>% filter(Entry == entry) %>% select(`Species name`, Protein))
+  virus_protein_name = paste(sp_prot[1], sp_prot[2], sep = " ")
+  return(virus_protein_name)
+}
+
+generate_plot <- function(virus_seq, seq_name) {
+  chaos_plot = chaos_game_representation(virus_seq) +
+                  labs(title = get_virus_protein_names(seq_name)) +
+                  theme(title = element_text(face = "bold", size = 10))
+  return(chaos_plot)
+}
+```
+
+## CGR plots
+
+```{r fig.height=6, fig.width=8}
+first <- generate_plot(virus_sequences[1], seq.names[1])
+second <- generate_plot(virus_sequences[2], seq.names[2])
+third <- generate_plot(virus_sequences[3], seq.names[3])
+fourth <- generate_plot(virus_sequences[4], seq.names[4])
+ggarrange(first, second, third, fourth)
+suppressMessages(ggsave("plots.png"))
+```
+
+## Parallel CGR using foreach
+
+```{r}
+cores <- detectCores() -1
+cl <- makeCluster(cores)
+registerDoParallel(cores)
+
+gl_loop <- global_loop()
+
+tic("Chaos - Parallel", format = T)
+with_loop(
+  gl_loop,
+  foreach(sequence = virus_sequences[1:10000], seq.name = seq.names[1:10000], .packages = c("kaos", "stringr", "later", "ggplot2")) %dopar% {
+    save_chaos_game_representation(sequence, seq.name)
+    }
+  )
+toc(log = T)
+```
+```{r}
+tic.log()
+```
+
+```{bash}
+rm human-false/* human-true/*
+```
+
+## Asynchronous CGR with later
+
+```{r}
+loop = global_loop()
+tic("Chaos - Async", format = T)
+with_loop(
+  loop,
+  mcmapply(
+    save_chaos_game_representation,
+    sequence = virus_sequences[1:10000],
+    seq.name = seq.names[1:10000],
+    mc.cores = cores
+    )
+  )
+toc(log = T)
+```
+
+```{bash}
+rm human-false/* human-true/*
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

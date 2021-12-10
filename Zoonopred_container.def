@@ -1,7 +1,0 @@
-Bootstrap: docker
-From: jupyter/datascience-notebook:latest
-
-%post
-  /opt/conda/bin/conda config --set channel_priority false
-  /opt/conda/bin/conda env create --name tensorEnv --file project_environment.yaml
-  /opt/conda/bin/Rscript --vanilla r_packages.R
