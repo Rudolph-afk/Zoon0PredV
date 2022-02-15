@@ -1,4 +1,5 @@
-#!/opt/conda/envs/tensorEnv/bin/python
+#!/usr/local/bin/python
+
 import pandas as pd
 import swifter
 import numpy as np
@@ -184,8 +185,8 @@ if __name__ == '__main__':
     df2 = pd.read_csv(args.liverpooluni) #('../data/virus_host_4rm_untitled.csv')
 
     df2 = df2[['Host_name', 'Host_TaxId', 'Virus_name', 'Virus_TaxId']].copy()
-    df2['Species ID'] = df2['Virus_TaxId'].progress_apply(getRankID, rank='species')
-    df2['Host name'] = df2.progress_apply(lambda x: nameMerger(x['Host_name'], x['Host_TaxId']), axis=1)
+    df2['Species ID'] = df2['Virus_TaxId'].apply(getRankID, rank='species')
+    df2['Host name'] = df2.apply(lambda x: nameMerger(x['Host_name'], x['Host_TaxId']), axis=1)
     df2.drop(['Host_name', 'Host_TaxId'], axis=1, inplace=True)
     df2.dropna(inplace=True)
 
@@ -199,8 +200,8 @@ if __name__ == '__main__':
     df['Infects human'] = np.where(df['Virus hosts'].str.contains(r'960[56]'), 'human-true','human-false')
 
     df['Virus hosts'] = df['Virus hosts'].str.split('; ')
-    df['Virus hosts'] = df.progress_apply(lambda x: list(filter(None, x['Virus hosts'])), axis=1)
-    df['Virus hosts'] = df['Virus hosts'].progress_apply('; '.join)
+    df['Virus hosts'] = df.apply(lambda x: list(filter(None, x['Virus hosts'])), axis=1)
+    df['Virus hosts'] = df['Virus hosts'].apply('; '.join)
 
     df = (df.set_index(df.columns.drop('Virus hosts',1).tolist())['Virus hosts'].str.split(';', expand=True)
             .stack()
@@ -300,7 +301,7 @@ if __name__ == '__main__':
                             #    .swifter.progress_bar(enable=True,
                             #                          desc='Joining host superkingdom names')
                             .apply('; '.join))
-    df['Sequence'] = df.progress_apply(lambda x: getSequenceFeatures(
+    df['Sequence'] = df.apply(lambda x: getSequenceFeatures(
         seqObj=x['Sequence'], entry=x['Entry'],
         organism=x['Species name'], status=x['Infects human']), axis=1)
     
