@@ -1,6 +1,6 @@
 from ete3 import NCBITaxa
 # from io import StringIO
-# from Bio import Phylo
+from Bio import SeqIO #, Phylo
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 ncbi = NCBITaxa()
