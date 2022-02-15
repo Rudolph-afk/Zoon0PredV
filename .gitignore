@@ -355,3 +355,8 @@ work/
 
 # Jupyter notebook cache
 **/.ipynb*/
+
+# Data
+notebooks/ZoonosisData.csv.gz
+notebooks/Sequences.fasta
+human-*/
