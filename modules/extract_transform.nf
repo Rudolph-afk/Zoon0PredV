@@ -1,5 +1,4 @@
 #!/usr/bin/env nextflow
-nextflow.enable.dsl=2
 
 process PrepData {
     // beforeScript source activate tensorEnv
@@ -18,6 +17,8 @@ process PrepData {
     
     script:
         """
-        data_cleaning.py --uniprot ${prot} --ncbivirusdb ${ncbiVirus} --liverpooluni ${eID} --virusdb ${virusDB} --fasta ${fasta}
+        data_cleaning.py --uniprot ${prot} \
+                            --ncbivirusdb ${ncbiVirus} \
+                            --liverpooluni ${eID} --virusdb ${virusDB} --fasta ${fasta}
         """
 }
