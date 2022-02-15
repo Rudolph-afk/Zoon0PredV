@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 #!/usr/bin/env nextflow
-=======
-#!/bin/nextflow
-
-nextflow.enable.dsl=2
->>>>>>> 6377fef3073d3822750dc9f1941ae577b02fdca9
 
 include { PrepData } from './modules/extract_transform'
 include { ChaosGameRepresentation } from './modules/feature_extraction'
@@ -31,25 +25,12 @@ workflow {
         .set{ dirSplits } 
 
     // Outputs tuples in the form (parentDirectory, subDirectory, FASTAFile)
-<<<<<<< HEAD
     // fcgrTestSplit  = dirSplits
     //                     .flatten()
     //                     .map { it -> def split=it; tuple(split, file("${split}/test"), file("${split}/test/*.fasta")) }
     // fcgrTrainSplit = dirSplits
     //                     .flatten()
     //                     .map { it -> def split=it; tuple(split, file("${split}/train"), file("${split}/train/*.fasta")) }
-=======
-    fcgrTrainSplit = dirSplits
-                        .flatten()
-                        .map {
-                            it -> def split=it.baseName;
-                            tuple(
-                                split, 
-                                file("${params.saveDir}/${split}/train"),
-                                file("${params.saveDir}/${split}/train/Sequences.fasta")
-                            )
-                        }
->>>>>>> 6377fef3073d3822750dc9f1941ae577b02fdca9
     
     if (params.test == true) {
         fcgrTestSplit  = dirSplits
@@ -64,7 +45,6 @@ workflow {
                             }
 
     // Combines the 2 channels to output a single channel emitting the tuples
-<<<<<<< HEAD
     // fCGRData = fcgrTrainSplit
     //                 .mix(fcgrTestSplit)
 
@@ -89,28 +69,6 @@ workflow {
         ModelTraining(data)
         // TestModel
     }
-=======
-        fCGRData = fcgrTrainSplit
-                    .mix(fcgrTestSplit)
-    } else {
-        fCGRData = fcgrTrainSplit
-    }
-
-    // Outputs tuples in the form (parentDirectory, subDirectory)
-    ChaosGameRepresentation(fCGRData) // fix from here
-
-    // fCGR = fCGR.map { it[0] } // Flatten will try to flatten individual output and will not produce desired output
-    ChaosGameRepresentation.out[1].flatten()
-                            .unique()
-                            .set{ data }
-                            // .map { it -> def dir=it; path(dir) }
-    // fCGRmoved = MoveCGRImages(fCGR)
-    
-    data = data
-            .map { it -> def dir=it; file("${params.saveDir}/${dir}") }
-
-    ModelTraining(data)
->>>>>>> 6377fef3073d3822750dc9f1941ae577b02fdca9
 }
 
 // workflow {
