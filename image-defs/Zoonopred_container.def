@@ -1,0 +1,50 @@
+Bootstrap: docker
+From: jupyter/datascience-notebook:python-3.7.6
+
+%files
+  r_packages.R r_packages.R
+  project_environment.yaml project_environment.yaml
+
+%environment
+  export PATH:"/opt/conda/envs/tensorEnv:$PATH"
+
+%post
+  apt update && apt upgrade -y
+  # exec bash && 
+  echo "#! /bin/bash\n\nshopt \$*\n" > /usr/local/bin/shopt
+  chmod +x /usr/local/bin/shopt
+  ln -s /usr/local/bin/shopt /usr/bin/shopt
+  echo "alias shopt='/usr/bin/shopt'" >> ~/.bashrc
+  sed -i 's/function //g' /opt/conda/etc/conda/activate.d/*.sh
+  sed -i 's/function //g' /opt/conda/etc/conda/deactivate.d/*.sh # /opt/conda/etc/conda/deactivate.d/*.sh 
+  conda init
+  . ~/.bashrc
+  cat ~/.bashrc > /home/jovyan/.bashrc
+  . /home/jovyan/.bashrc
+  conda activate base
+  conda config --set channel_priority false
+  conda config --add channels conda-forge
+  conda config --add channels plotly
+  conda config --add channels anaconda
+  conda config --add channels bioconda
+  conda create --name tensorEnv --file project_environment.yaml
+  conda activate tensorEnv
+  pip install dash-core-components==1.12.1
+  pip install dash-html-components==1.1.1
+  pip install dash-renderer==1.8.2
+  pip install dash-table==4.10.1
+  pip install jupyter-server-proxy==3.0.2
+  pip install opencv-python==4.5.2.54
+  pip install simpervisor==0.4
+  pip install tensorflow-addons==0.10.0
+  pip install typeguard==2.12.1
+  pip install websocket-client==1.0.1
+  pip install yarl==1.5.1
+
+  Rscript --vanilla r_packages.R
+
+  . /opt/conda/bin/activate tensorEnv
+
+%runscript
+  # exec "$@"
+  . /opt/conda/bin/activate tensorEnv && jupyter lab --no-browser --port=7045 --ip 0.0.0.0 

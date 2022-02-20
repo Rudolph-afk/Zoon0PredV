@@ -1,0 +1,48 @@
+Bootstrap: docker
+From: rocker/rstudio:latest
+
+%files
+  r_packages.R r_packages.R
+  project_environment.yaml project_environment.yaml
+
+%environment
+  export RETICULATE_PYTHON="/opt/conda/bin/python"
+  export PASSWORD=rstudio
+
+%post
+  apt update && apt upgrade -y
+  apt install -y build-essential wget
+  apt install -y --reinstall systemd
+
+  wget https://github.com/jgm/pandoc/releases/download/2.16.1/pandoc-2.16.1-1-amd64.deb && \
+    dpkg -i pandoc-2.16.1-1-amd64.deb && rm pandoc-2.16.1-1-amd64.deb
+
+  Rscript --vanilla r_packages.R
+  
+  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    sh Miniconda3-latest-Linux-x86_64.sh -b -u -p /opt/conda/ && \
+    rm Miniconda3-latest-Linux-x86_64.sh
+  
+  chmod -R 777 /opt/conda/
+  . /opt/conda/bin/activate
+  
+  conda config --set channel_priority false
+  conda config --add channels conda-forge
+  conda config --add channels plotly
+  conda config --add channels anaconda
+  conda config --add channels bioconda
+  
+  conda install -y pandas swifter numpy matplotlib seaborn scikit-learn imbalanced-learn ete3
+  pip install opencv-python
+
+  chmod -R 777 /var
+
+%startscript
+  cd /home/rstudio
+  . /opt/conda/bin/activate
+  /init
+
+%runscript
+  cd /home/rstudio
+  . /opt/conda/bin/activate
+  /init

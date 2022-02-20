@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: r-base:3.6.3
+
+%post
+    apt-get update && apt-get upgrade -y
+    apt-get install -y software-properties-common && apt-get update
+    # add-apt-repository ppa:deadsnakes/ppa
+    apt-get install -y python3 python3-pip
+    apt-get install -y libssl-dev openssl r-cran-httr r-cran-covr curl
+    R -e "install.packages(
+            c('argparse', 'kaos', 'protr',
+            'stringr', 'progress', 'parallel',
+            'foreach', 'doParallel'),
+            dependencies=TRUE, repos='http://cran.rstudio.com/')"
