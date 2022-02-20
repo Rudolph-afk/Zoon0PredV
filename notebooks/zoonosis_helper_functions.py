@@ -71,7 +71,13 @@ def getSequenceFeatures(seqObj, entry, **kwargs):
         pass
     return seqObj
 
-def read_fasta(fastaFileName):
+def read_fasta(fastaFileName: str):
+    """
+    params:
+        Fasta file
+    returns:
+        list of (entry, FASTASeq object)
+    """
     with open(fastaFileName, 'r') as f:
         file = f.read()
         
@@ -79,9 +85,8 @@ def read_fasta(fastaFileName):
     
     file = file.split('>') # Divide to individual sequences
     file = list(filter(None, file)) # Remove empty spaces
-
-    fasta_sequence_dictionary = {}
-    for seq in file:
+    
+    def split_sequences(seq):
         seq = seq.split('\n')
         entry = seq[0].split('|')[1]
         entryname_protein_name = seq[0].split('|')[2].split('OS=')[0]
@@ -89,11 +94,14 @@ def read_fasta(fastaFileName):
         protein_name = ' '.join(protein_name_lst).strip()
         seq = '\n'.join(seq[1:])
         seqObj = FASTASeq(entry, seq, protein_name)
-        fasta_sequence_dictionary[entry] = seqObj
+        
+        return (entry, seqObj)
+    
+    fasta_sequence_pair = list(map(split_sequences, file))
+    
+    fasta_sequence_pair = sorted(fasta_sequence_pair) # sorts tuples by key
+    return fasta_sequence_pair # returns tuple of (entry, FASTASeq object)
 
-    seq_items = fasta_sequence_dictionary.items() # creates list of key, value tuples
-    fasta_dictionary = sorted(seq_items) # sorts tuples by key
-    return fasta_dictionary # returns tuple of (entry, FASTASeq object)
 
 # Uses ete3 taxonomy to obtain the rank of an organism from its taxonomic identifier
 def getRankName(idf: int, rank: str):
