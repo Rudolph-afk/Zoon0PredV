@@ -1,5 +1,13 @@
 # Zoon0PredV
 
+If you want to also download the data please install [git-lfs](https://git-lfs.github.com/) and setup by running:
+
+    ```bash
+    git lfs install
+    ```
+
+before cloning the repo.
+
 #### TO CHECK
 
 The notebooks directory contains jupyter lab notebooks and a markdown file which basically do what the entire pipeline does. I have tried to explain all I could in the notebooks.
