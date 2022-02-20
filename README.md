@@ -1,5 +1,9 @@
 # Zoon0PredV
 
+#### TO CHECK
+
+The notebooks directory contains jupyter lab notebooks and a markdown file which basically do what the entire pipeline does. I have tried to explain all I could in the notebooks.
+
 ## Execution
 
 To run full pipeline: Data preparation, features extractiona, training and testing
@@ -30,6 +34,7 @@ To run pipeline to just test -- Feature extraction and testing (Assumes the mode
 | **[bin](bin/)**             | R and python scripts                               |
 | **[conf](conf/)**           | Additional pipeline config files                   |
 | **[data](data/)**           | Input data and output data generated from pipeline |
+| **[image-defs](image-defs/)**           | Singularity container definition files |
 | **[modules](modules/)**     | Nextflow process definitions                       |
 | **[notebooks](notebooks/)** | ipynb notebooks                                    |
 
