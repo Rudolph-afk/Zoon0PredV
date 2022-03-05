@@ -357,6 +357,5 @@ work/
 **/.ipynb*/
 
 # Data
-notebooks/ZoonosisData.csv.gz
-notebooks/Sequences.fasta
-human-*/
+data/*Zoonosis/
+data/NonEukaryote-Human/
