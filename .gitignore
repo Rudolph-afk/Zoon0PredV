@@ -359,3 +359,6 @@ work/
 # Data
 data/*Zoonosis/
 data/NonEukaryote-Human/
+
+# Singularity images
+singularity-images/
