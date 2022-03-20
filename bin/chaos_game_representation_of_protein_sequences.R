@@ -1,26 +1,37 @@
-#!/opt/conda/bin/Rscript --vanilla
-args = commandArgs(trailingOnly=TRUE)
+#!/usr/bin/Rscript --vanilla
+
+# args = commandArgs(trailingOnly=TRUE)
 suppressPackageStartupMessages({
-    library('argparse')
-    library('kaos')
-    library('protr')
+    library('argparse') # Requires active python installation
+    library('kaos') # Chaos game representation
+    library('protr') # Reading FASTA files
     library('stringr')
-    library('progress') # Not used in pipeline but usefull when running directly in terminal
+    library('progress') # Not used in pipeline but useful for development
     library('parallel')
-    library('later')
+    library('later') # Implementing asynchronous programming
     library('foreach') # Not required by main implementation
     library('doParallel') # Also not req.
 })
 
 n.cores <- detectCores()
 
-parser <- ArgumentParser(description='Create FCGR of FASTA sequences')
+parser <- ArgumentParser(description='Create a FCGR representation of FASTA protein sequences')
 
-parser$add_argument('--fasta', help='Fasta file')
+parser$add_argument('--fasta', help='File - Fasta file')
+parser$add_argument('-t', dest="prefix", action='store_true',
+                    help='sequence ID contains "human_true" or "human_false" as prefix. If so save image in directory named "human-true" or "human-false", respectively (default=FALSE')
+parser$add_argument('--label', '-l', action='store_true', help='add corners and labels to FCGR (default=FALSE)')
+parser$add_argument('--size', '-s', type="integer", default=600, help='Integer - width and height of the image, image width is equal to height (default: width=height=600)')
 
 args <- parser$parse_args()
 
 file = args$fasta
+
+prefix.human = args$prefix
+
+CORNERS.LABELS = args$label
+
+WIDTH.HEIGHT = args$size
 
 v.seqs = unlist(readFASTA(file = file))
 
@@ -35,36 +46,40 @@ remove_slash = function (x) {
     return(result)
 }
 
+specify_directory <- function(x) {
+  if (grepl(pattern = "true", x = x)) {
+    new_name <- paste("human-true", x, sep="/")
+  } else {
+    new_name <- paste("human-false", x, sep="/")
+  }
+  return(new_name)
+}
+
 seq.names = names(v.seqs)
 seq.names = unlist(seq.names)
 seq.names = lapply(seq.names, remove_slash)
 
-specify_directory <- function(x) {
-    if (grepl(pattern = "true", x = x)) {
-        new_name <- paste("human-true", x, sep="/")
-    } else {
-        new_name <- paste("human-false", x, sep="/")
-    }
-    return(new_name)
+if (prefix.human){
+  seq.names = lapply(seq.names, specify_directory)
 }
-
-seq.names = lapply(seq.names, specify_directory)
 
 names(v.seqs) = seq.names
 
 chaos_game_representation = function (x) {
-    chaos.obj = cgr(str_split(x, '', simplify = T))
+    protein.sequence = str_split(x, '', simplify = TRUE)
+    chaos.obj = cgr(protein.sequence, res=300)
     chaos.plot = with_temp_loop(
-      cgr.plot(chaos.obj, mode = "matrix", corners=T, labels=T)
+      cgr.plot(chaos.obj, mode = "matrix", corners=CORNERS.LABELS, labels=CORNERS.LABELS)
       )
     return(chaos.plot)
 }
 
 save_chaos_game_representation <- function (sequence, seq.name) {
-    file_name <- paste(seq.name, ".jpeg", sep="")
+    file_name <- paste(seq.name, ".png", sep="")
     chaos.graph <- chaos_game_representation(sequence)
     with_temp_loop({
-      jpeg(file_name, width = 96, height = 96)
+    # JPG performs better for photorealistic images, PNG for drawings with sharp lines and solid colors
+      png(file_name, width = WIDTH.HEIGHT, height = WIDTH.HEIGHT)
       print(chaos.graph)
       dev.off()
       }
