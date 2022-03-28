@@ -3,7 +3,7 @@ From: tensorflow/tensorflow:2.6.0-gpu
 
 %post
     apt-get update && apt-get upgrade -y
-    apt-get -y install python-numpy python-qt4 python-lxml python-six graphviz
+    apt-get -y install python-numpy python-qt4 python-lxml python-six graphviz python3-opencv
     python -m pip install -U pip
     pip install pandas
     pip install matplotlib
