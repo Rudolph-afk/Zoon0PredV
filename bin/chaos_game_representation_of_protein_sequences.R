@@ -69,7 +69,7 @@ chaos_game_representation = function (x) {
     protein.sequence = str_split(x, '', simplify = TRUE)
     chaos.obj = cgr(protein.sequence, res=300)
     chaos.plot = with_temp_loop(
-      cgr.plot(chaos.obj, mode = "matrix", corners=CORNERS.LABELS, labels=CORNERS.LABELS)
+      cgr.plot(chaos.obj, mode = "matrix", corners=CORNERS.LABELS, labels=T)
       )
     return(chaos.plot)
 }
