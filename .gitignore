@@ -359,6 +359,11 @@ work/
 # Data
 data/*Zoonosis/
 data/NonEukaryote-Human/
+*.fasta
 
 # Singularity images
 singularity-images/
+
+# Model checkpoints
+check*
+
