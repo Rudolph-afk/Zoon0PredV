@@ -4,7 +4,10 @@ process PrepData {
     // beforeScript source activate tensorEnv
     publishDir params.saveDir, mode: params.publish_dir_mode,
                 enabled: params.save
-
+    
+    label  "with_cpus"
+    tag    "Data Cleaning"
+    
     input:
         path prot
         path ncbiVirus

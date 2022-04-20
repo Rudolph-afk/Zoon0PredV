@@ -5,15 +5,8 @@ include { ChaosGameRepresentation } from './modules/feature_extraction'
 include { ModelTraining } from './modules/train_conv_net'
 
 
-// uniprot     = Channel.fromPath(params.prot,      type: 'file', glob: false)
-// ncbiVirus   = Channel.fromPath(params.ncbiVirus, type: 'file', glob: false)
-// eid         = Channel.fromPath(params.eID,       type: 'file', glob: false)
-// virus_db    = Channel.fromPath(params.virusDB,   type: 'file', glob: false)
-// fasta       = Channel.fromPath(params.fasta,     type: 'file', glob: false)
-
-
-workflow {
-    // Outputs directories (MetazoaData etc.) with accompanying data as a list
+workflow ExTrLoadTT { // Extract Transform Load Train and Test
+    // Outputs directories (MetazoaData etc.) with accompanying data as a list channel
     PrepData(
             file(params.prot),
             file(params.ncbiVirus), 
@@ -24,53 +17,36 @@ workflow {
         .flatten()
         .set{ dirSplits } 
 
-    // Outputs tuples in the form (parentDirectory, subDirectory, FASTAFile)
-    // fcgrTestSplit  = dirSplits
-    //                     .flatten()
-    //                     .map { it -> def split=it; tuple(split, file("${split}/test"), file("${split}/test/*.fasta")) }
-    // fcgrTrainSplit = dirSplits
-    //                     .flatten()
-    //                     .map { it -> def split=it; tuple(split, file("${split}/train"), file("${split}/train/*.fasta")) }
-    
-    if (params.test == true) {
-        fcgrTestSplit  = dirSplits
-                            .flatten()
-                            .map {
-                                it -> def split=it.baseName;
-                                tuple(
-                                    split,
-                                    file("${params.saveDir}/${split}/test"),
-                                    file("${params.saveDir}/${split}/test/Sequences.fasta")
-                                )
-                            }
-
-    // Combines the 2 channels to output a single channel emitting the tuples
-    // fCGRData = fcgrTrainSplit
-    //                 .mix(fcgrTestSplit)
-
-    // Outputs tuples in the form (parentDirectory, subDirectory)
-    // fCGR = ChaosGameRepresentation(fCGRData) // fix from here
 
     ChaosGameRepresentation(dirSplits).out
                                         .set{ data }
-
-    // fCGR = fCGR.map { it[0] } // Flatten will try to flatten individual output and will not produce desired output
-    // data = fCGR = fCGR.unique()
-    //                     .map { it -> def dir=it; file(dir) }
-    // fCGRmoved = MoveCGRImages(fCGR)
-    
-    // data = fCGRmoved.flatten()
-    //                 .map { it -> def dir=it; file(dir) }
-    if ( params.trainOnly ) {
-        ModelTraining(data)
-    } // else if ( params.testOnly ) {
-        // TestModel
-    } else {
-        ModelTraining(data)
-        // TestModel
-    }
+    ModelTraining(data).out[0].set{ model }
+    model
+        .combine(data, by: 0)
+        .multiMap{
+            model: it -> tuple(it[0], it[1])
+            data:  it -> tuple(it[0], it[2])
+        }
+        .set{ result }
+    // ModelTesting(model, data)
 }
 
+workflow {
+    if ( params.trainOnly ) {
+        Channel.fromPath(params.train_data_tarball).set{ data }
+        ModelTraining(data)
+    } else if ( params.testOnly ) {
+        // Channel.fromPath(test_data)
+        // .multiMap{
+        //     model: it -> tuple(val(it.baseName), file("${it}/model/"))
+        //     data:  it -> tuple(val(it.baseName), file("${it}/test/test.tar.gz"))
+        //     }
+        // .set{ result }
+        // ModelTesting(result.model, result.data)
+    } else {
+        ETL_T_T()
+    }
+}
 // workflow {
 //     main:
 //         prepareData()

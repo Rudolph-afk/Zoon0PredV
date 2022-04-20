@@ -4,7 +4,7 @@
 suppressPackageStartupMessages({
     library('argparse') # Requires active python installation
     library('kaos') # Chaos game representation
-    library('protr') # Reading FASTA files
+    library('protr') # Parse FASTA files | can use any parser but make sure to 'simplify' before CGR computation  
     library('stringr')
     library('progress') # Not used in pipeline but useful for development
     library('parallel')
@@ -21,7 +21,7 @@ parser$add_argument('--fasta', help='File - Fasta file')
 parser$add_argument('-t', dest="prefix", action='store_true',
                     help='sequence ID contains "human_true" or "human_false" as prefix. If so save image in directory named "human-true" or "human-false", respectively (default=FALSE')
 parser$add_argument('--label', '-l', action='store_true', help='add corners and labels to FCGR (default=FALSE)')
-parser$add_argument('--size', '-s', type="integer", default=600, help='Integer - width and height of the image, image width is equal to height (default: width=height=600)')
+parser$add_argument('--size', '-s', type="integer", default=128, help='Integer - width and height of the image, image width is equal to height (default: width=height=600)')
 
 args <- parser$parse_args()
 
