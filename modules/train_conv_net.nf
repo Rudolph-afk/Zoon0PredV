@@ -6,17 +6,18 @@ process ModelTraining {
                 enabled: params.save
 
     tag        "${directory}"
-    maxForks   1
+    label       "with_gpus"
     
     input:
-        path   directory
+        tuple  val(directory), path(train)
 
     output:
-        path   "model"
+        tuple  val(directories), path("model")
         path   "*.csv"
     
     script:
         """
-        train_zoonosis_model.py -d ${directory} 
+        tar -xzvf ${train}
+        train_zoonosis_model.py -t .
         """
 }
