@@ -1,27 +1,39 @@
-#!/usr/bin/env nextflow
 
-process PrepData {
-    // beforeScript source activate tensorEnv
-    publishDir params.saveDir, mode: params.publish_dir_mode,
-                enabled: params.save
-    
-    label  "with_cpus"
-    tag    "Data Cleaning"
-    
+process LoadCleanData {
+    // publishDir   params.saveDir,
+    //              mode:      params.publish_dir_mode,
+    //              enabled:   params.save
+
+    label       "with_cpus"
+    tag         "Data Cleaning"
+
     input:
-        path prot
-        path ncbiVirus
-        path eID
-        path virusDB
-        path fasta
+        path    prot
+        path    ncbiVirus
+        path    eID
+        path    virusDB
+        path    fasta
 
     output:
-        path "*"
-    
+        path    "*"
+
     script:
         """
-        data_cleaning.py --uniprot ${prot} \
-                            --ncbivirusdb ${ncbiVirus} \
-                            --liverpooluni ${eID} --virusdb ${virusDB} --fasta ${fasta}
+        data_cleaning.py --uniprot $prot \
+                         --ncbivirusdb $ncbiVirus \
+                         --liverpooluni $eID \
+                         --virusdb $virusDB \
+                         --fasta $fasta
         """
 }
+
+// process ExtractDataArchive {
+//     input:
+//         path data from params.dataTarball
+//     output:
+//         path
+//     script:
+//         """
+//         tar xjf $data
+//         """
+// }

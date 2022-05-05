@@ -5,7 +5,6 @@ import swifter
 import numpy as np
 import re
 import os
-import gc
 import argparse
 from sklearn.model_selection import train_test_split
 from imblearn.under_sampling import RandomUnderSampler
@@ -71,7 +70,7 @@ if __name__ == '__main__':
 
     df['Species name'] = (df.drop('Taxonomic lineage (SPECIES)', axis=1)
                         .swifter#.progress_bar(enable=True, desc='Getting Species name')
-                        .apply(lambda x: getRankName(x['Species taxonomic ID'], 
+                        .apply(lambda x: getRankName(x['Species taxonomic ID'],
                                                     rank='species'), axis=1))
 
     df['Species superkingdom'] = (df['Species taxonomic ID']
@@ -93,8 +92,8 @@ if __name__ == '__main__':
     # List of viruses which do not have assigned hosts in the data
     noHostViruses = df[df['Virus hosts'].isnull()]['Species name'].unique().tolist()
 
-    # Create independent dataframe of viruses with no assigned host and simltaneously identify the same viruses from the data 
-    # whcih already have assigned hosts and assign host names based on those. 
+    # Create independent dataframe of viruses with no assigned host and simltaneously identify the same viruses from the data
+    # whcih already have assigned hosts and assign host names based on those.
     df_na_hosts = (df[(~df['Virus hosts'].isnull()) &\
         (df['Species name']
         .isin(noHostViruses))][['Species name', 'Virus hosts']])
@@ -247,14 +246,11 @@ if __name__ == '__main__':
             .loc[:, df.columns]
             ).copy()
 
-    #### garbage collection, clear memory
-    gc.collect()
-
     # Restructuring the data
 
     fastaFileName = args.fasta #'../data/uniprot-keyword Virus+entry+into+host+cell+[KW-1160] +fragment no.fasta'
     entry_seq = read_fasta(fastaFileName)
-    
+
     dff.sort_values(by='Entry', inplace=True)
 
     objList = []
@@ -268,15 +264,13 @@ if __name__ == '__main__':
 
     # free memory
     del dff, df2
-    #### garbage collection, free memory
-    gc.collect()
 
     df.drop_duplicates(inplace=True)
 
     df['Virus hosts ID'] = df['Virus hosts ID'].apply(str)
 
     df = (df.groupby('Entry', as_index=False)
-        .agg({'Virus hosts':set, #'Protein':'first', 
+        .agg({'Virus hosts':set, #'Protein':'first',
                 'Infects human':'first', 'Species name':'first',
                 'Host superkingdom':set,
                 'Host kingdom':set,
@@ -304,7 +298,7 @@ if __name__ == '__main__':
     df['Sequence'] = df.apply(lambda x: getSequenceFeatures(
         seqObj=x['Sequence'], entry=x['Entry'],
         organism=x['Species name'], status=x['Infects human']), axis=1)
-    
+
     df['Protein'] = df['Sequence'].apply(lambda x: x.protein_name)
     # Append sequences to dataframe
     # df2 = pd.read_csv('../data/sequences.csv')
@@ -323,14 +317,12 @@ if __name__ == '__main__':
 
     # free memory
     del dfff
-    #### garbage collection, free memory
-    gc.collect()
 
     df.drop_duplicates(inplace=True)
 
-    df = df[['Entry', 'Protein', 'Species name', 
+    df = df[['Entry', 'Protein', 'Species name',
             'Species taxonomic ID', 'Species family', 'Virus hosts',
-            'Virus hosts ID', 'Host kingdom', 
+            'Virus hosts ID', 'Host kingdom',
             'Host superkingdom', 'Molecule type', 'Infects human', 'Sequence']]
 
 
@@ -388,7 +380,7 @@ if __name__ == '__main__':
 
     # Undersample majority class such that minority class (human-false) is 60% of the majority class (human-true317316)
     seed = 960505
-    rus = RandomUnderSampler(sampling_strategy=0.6, random_state=seed)
+    rus = RandomUnderSampler(sampling_strategy=1., random_state=seed)
     sampled_dataframes = []
     for dt in dataframes:
         clas = dt['Infects human']
@@ -401,16 +393,16 @@ if __name__ == '__main__':
     for dff, file, folder in toSave:
        # save dataframes as csv
         dff.drop('Sequence', axis=1).to_csv(f'{folder}/{file}Data.csv.gz', index=False, compression='gzip')
-        
+
        # Create subdirectories
-        os.makedirs(os.path.join(folder, 'train/human-true'), exist_ok=True)
-        os.makedirs(os.path.join(folder, 'test/human-true'), exist_ok=True)
-        os.makedirs(os.path.join(folder, 'train/human-false'), exist_ok=True)
-        os.makedirs(os.path.join(folder, 'test/human-false'), exist_ok=True)
+        os.makedirs(os.path.join(folder, 'train'), exist_ok=True)
+        os.makedirs(os.path.join(folder, 'test'), exist_ok=True)
+        # os.makedirs(os.path.join(folder, 'train/human-false'), exist_ok=True)
+        # os.makedirs(os.path.join(folder, 'test/human-false'), exist_ok=True)
        # Split data to train and test data
         train, test = train_test_split(dff, test_size=0.2, random_state=seed) # Will further split 15% of train as validation during training
        # Save test and train sequences
         save_sequences(train, f'{folder}/train/Sequences') # Will move to subdirectories after feature extraction
         save_sequences(test, f'{folder}/test/Sequences')
-        
-        print('Done with', folder)
+
+        print('Done with', file)

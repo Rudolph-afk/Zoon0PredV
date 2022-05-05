@@ -4,12 +4,12 @@
 suppressPackageStartupMessages({
     library('argparse') # Requires active python installation
     library('kaos') # Chaos game representation
-    library('protr') # Parse FASTA files | can use any parser but make sure to 'simplify' before CGR computation  
-    library('stringr')
-    library('progress') # Not used in pipeline but useful for development
+    library('protr') # Parse FASTA files | can use any parser but make sure to 'simplify' before CGR computation
+    library('stringr') # String manipulation
+    # library('progress') # Development
     library('parallel')
     library('later') # Implementing asynchronous programming
-    library('foreach') # Not required by main implementation
+    # library('foreach') # Not required by main implementation
     library('doParallel') # Also not req.
 })
 
@@ -18,10 +18,22 @@ n.cores <- detectCores()
 parser <- ArgumentParser(description='Create a FCGR representation of FASTA protein sequences')
 
 parser$add_argument('--fasta', help='File - Fasta file')
-parser$add_argument('-t', dest="prefix", action='store_true',
-                    help='sequence ID contains "human_true" or "human_false" as prefix. If so save image in directory named "human-true" or "human-false", respectively (default=FALSE')
-parser$add_argument('--label', '-l', action='store_true', help='add corners and labels to FCGR (default=FALSE)')
-parser$add_argument('--size', '-s', type="integer", default=128, help='Integer - width and height of the image, image width is equal to height (default: width=height=600)')
+parser$add_argument(
+    '-p', dest="prefix",
+    action='store_true',
+    help="Sequence ID contains 'human_true' or 'human_false' as prefix. If so save image in directory named 'human-true' or 'human-false', respectively (default=FALSE)"
+    )
+parser$add_argument(
+    '--label', '-l',
+    action='store_true',
+    help='Add corners and labels to FCGR (default=FALSE)'
+    )
+parser$add_argument(
+    '--size', '-s',
+    type="integer",
+    default=128,
+    help="Integer - width and height of the image. Image width is equal to height (default: width=height=600)"
+    )
 
 args <- parser$parse_args()
 
@@ -60,6 +72,10 @@ seq.names = unlist(seq.names)
 seq.names = lapply(seq.names, remove_slash)
 
 if (prefix.human){
+  path_true = "human-true"
+  dir.create(path_true, showWarnings = FALSE, recursive = FALSE, mode = "0777")
+  path_false = "human-false"
+  dir.create(path_false, showWarnings = FALSE, recursive = FALSE, mode = "0777")
   seq.names = lapply(seq.names, specify_directory)
 }
 

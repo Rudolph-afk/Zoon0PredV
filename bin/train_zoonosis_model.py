@@ -3,14 +3,15 @@
 import argparse
 import os
 import tensorflow as tf
-from tensorflow import keras
+# from tensorflow import keras
 from tensorflow.random import set_seed
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint #, EarlyStopping
-# from tensorflow.keras.metrics import Recall, Precision
+from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint, ReduceLROnPlateau #, EarlyStopping
+from tensorflow.keras.metrics import  BinaryAccuracy, FalsePositives, TruePositives, TrueNegatives, \
+                                      FalseNegatives, AUC #, Recall, Precision
+import numpy as np # Needed by reduce_lr
 from numpy.random import seed
-import tensorflow_addons as tfa
-from tensorflow_addons.metrics import MatthewsCorrelationCoefficient
+from model_definition import Zoon0Pred_model
 # tf.get_logger().setLevel('ERROR')
 
 # Set random state for tensorflow operations (REPRODUCIBILITY)
@@ -20,38 +21,38 @@ seed(20192020)
 # Set GPU usage and memory growth
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 for device in physical_devices:
-    tf.config.experimental.set_memory_growth(device, enable=True) 
+    tf.config.experimental.set_memory_growth(device, enable=True)
 
 mirrored_strategy = tf.distribute.MirroredStrategy() # For multi gpu training
 # distributed_strategy = tf.distribute.Strategy(extended)
 
-def loadImages(train):
+def loadImages(train, BATCH_SIZE):
     """
     params:
         train      : directory name for training data
     returns:
-        A tuple of training and validation image data generator objects of 128 batches 
+        A tuple of training and validation image data generator objects in batches of 256
     """
     data_generator = ImageDataGenerator(rescale=1./255, validation_split=0.2)
 
     train_data_iterator = data_generator.flow_from_directory(
         train,
-        target_size=(96,96),
+        target_size=(128,128),
         color_mode='grayscale',
         classes=['human-false', 'human-true'],
         class_mode='binary',
-        batch_size=128,
+        batch_size=BATCH_SIZE,
         seed=19980603,
         subset = 'training'
     )
-    
+
     validation_data_iterator = data_generator.flow_from_directory(
         train,
-        target_size=(96,96),
+        target_size=(128,128),
         color_mode='grayscale',
         classes=['human-false', 'human-true'],
         class_mode='binary',
-        batch_size=128,
+        batch_size=BATCH_SIZE,
         seed=19980603,
         subset = 'validation'
     )
@@ -59,10 +60,9 @@ def loadImages(train):
     return (train_data_iterator, validation_data_iterator)
 
 
-def trainSaveModel(base_dir, train_data_iterator, validation_data_iterator, model_checkpoint, logs):
+def trainSaveModel(train_data_iterator, validation_data_iterator, model_checkpoint, logs, model_name, BATCH_SIZE):
     """
     params:
-        base_dir                    : Base directory containing training, test and validation datasets and directory for saving
         train_data_iterator         : ImageData generator object for the training data, produced by the loadImages function
         validation_data_iterator    : ImageData generator object for the validation data, produced by the loadImages function
         model_checkpoint            : Name to give the model at checkpoints
@@ -70,61 +70,28 @@ def trainSaveModel(base_dir, train_data_iterator, validation_data_iterator, mode
     returns:
         saves best model in directory after training alongside training logs in csv
     """
-#     steps_per_epoch = train_data_iterator
-#     validation_steps = validation_data_iterator
+
     model_checkpoint_callback = ModelCheckpoint(
         filepath=model_checkpoint,
         save_weights_only=True,
-        monitor='val_accuracy',
+        monitor='val_MCC',
         mode='max',
         save_best_only=True
     )
+    reduce_lr = ReduceLROnPlateau(
+        monitor='val_AUC',
+        factor=0.002, patience=3, # Reduce learning rate by 0.002 if the AUC remains unchanged for 3 epochs
+        min_lr=0.001
+    )
+
     # stop_early_callback = EarlyStopping(
     #     monitor='val_accuracy',
     #     patience=5
     # )
-    TRAIN_STEPS = (train_data_iterator.samples // 128)
-    VALIDATION_STEPS = (validation_data_iterator.samples // 128)
+    TRAIN_STEPS = (train_data_iterator.samples / BATCH_SIZE)
+    VALIDATION_STEPS = (validation_data_iterator.samples / BATCH_SIZE)
 
-    with mirrored_strategy.scope():
-        model = keras.models.Sequential([
-            keras.layers.Conv2D(48, input_shape=(96,96,1),
-                                kernel_size=(3,3),
-                                activation='relu',
-                                bias_regularizer=keras.regularizers.l2()),
-
-            keras.layers.BatchNormalization(),
-            keras.layers.Conv2D(48, kernel_size=(3,3), activation='relu',
-                                bias_regularizer=keras.regularizers.l2()),
-
-            keras.layers.BatchNormalization(),
-            keras.layers.MaxPool2D(pool_size=(3,3), strides=3),   # (pool_size=(2,2), strides=2),
-
-            keras.layers.Dropout(0.2),
-
-            keras.layers.Flatten(),
-
-            keras.layers.Dense(units=128, activation='relu',
-                            bias_regularizer=keras.regularizers.l2()),
-
-            keras.layers.Dense(1, activation='sigmoid',
-                            bias_regularizer=keras.regularizers.l2())
-        ])
-        # Precision and recall should be defined under the same scope as the model
-        # precision = Precision()
-        # recall = Recall()
-        mcc = MatthewsCorrelationCoefficient(num_classes=2)
-        # model.add_metric()
-
-    model.compile(
-        loss='binary_crossentropy',
-        optimizer='rmsprop',
-        metrics=[
-            'accuracy',
-            # precision,
-            # recall,
-            mcc
-            ])
+    model = Zoon0Pred_model(mirrored_strategy)
 
     model.fit(
         train_data_iterator,
@@ -132,24 +99,25 @@ def trainSaveModel(base_dir, train_data_iterator, validation_data_iterator, mode
         validation_data=validation_data_iterator,
         validation_steps=VALIDATION_STEPS,
         shuffle=True,
-        epochs=15,
+        epochs=100,
         verbose=0,
         use_multiprocessing=True,
         callbacks=[
             CSVLogger(logs),
             model_checkpoint_callback,
+            reduce_lr
             # stop_early_callback
             ])
-    
+
     model.load_weights(model_checkpoint)
-    keras.models.save_model(model, 'model') # (model, os.path.join(base_dir, 'model'))
+    tf.keras.models.save_model(model, model_name)
 
 
-def main(base_dir, train, model_checkpoint, logs):
-    
-    train_iterator, validation_data_iterator = loadImages(train)
-    
-    trainSaveModel(base_dir, train_iterator, validation_data_iterator, model_checkpoint, logs)
+def main(train, model_checkpoint, logs, model_name, BATCH_SIZE=64):
+
+    train_iterator, validation_data_iterator = loadImages(train, BATCH_SIZE)
+
+    trainSaveModel(train_iterator, validation_data_iterator, model_checkpoint, logs, model_name, BATCH_SIZE)
 
 
 
@@ -161,42 +129,57 @@ if __name__ == '__main__':
                                      Train neural network for zoonosis prediction using CGR images
                                      """.strip(),
                                      )
-    
+
     parser.add_argument('-d', '--baseDirectory',
-                        required=True,
-                        help='Directory containing CGR images split into train, test and validation sub-directories')
-        
+                        required=False,
+                        help='Main directory containing train and test sub-directories')
+
     parser.add_argument('-t', '--train', default=None,
                         required=False,
                         help='Directory containing traininig CGR images')
-            
+
     parser.add_argument('-m', '--model_checkpoint', default=None,
                         required=False,
-                        help='Directory to save best model, default saves to base directory')
-            
+                        help='Name of the model, default saves to base directory')
+
     parser.add_argument('-l', '--logs', default=None,
                         required=False,
-                        help='Directory to save training logs as csv, default saves to base directory')
+                        help='Training logs as csv, default saves to base directory')
+
+    parser.add_argument('-n', '--name', default=None,
+                        required=False,
+                        help='Name to save model. Default: model')
 
     args = parser.parse_args()
 
-    # assert os.path.isdir(args.baseDirectory), 'This directory does not exist'
     base_dir = args.baseDirectory
-    
+
     if (args.train == None):
-        train = os.path.join(base_dir, 'train')  
+        train = os.path.join(base_dir, 'train')
     else:
         assert os.path.isdir(args.train), 'This directory does not exist'
         train = args.train
 
-    if args.model_checkpoint == None:
-        model_checkpoint = 'checkpoint.ckpt' # os.path.join(base_dir, 'checkpoint.ckpt')
+    if (args.model_checkpoint == None):
+        model_checkpoint = 'checkpoint.ckpt'
     else:
         model_checkpoint = args.model
-    
-    if (args.logs == None):
-        logs = 'trainingLogs.csv' # os.path.join(base_dir, 'trainingLogs.csv')
+
+    if (args.logs == None) & (base_dir != None):
+        logs = os.path.join(base_dir, 'trainingLogs.csv')
     else:
         logs = args.logs
-        
-    main(base_dir, train, model_checkpoint, logs)
+
+    if (args.name == None) & (base_dir != None):
+        model_name = os.path.join(base_dir, 'model')
+    else:
+        model_name = args.name
+
+    directory = base_dir.split("/")[-1]
+    condition = directory == "MetazoaZoonosisData" or directory == "RNA-MetazoaZoonosisData"
+    if condition:
+        BATCH_SIZE=256
+    else:
+        BATCH_SIZE=64
+
+    main(train, model_checkpoint, logs, model_name, BATCH_SIZE=BATCH_SIZE)

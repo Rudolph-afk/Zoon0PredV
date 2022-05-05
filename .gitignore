@@ -367,3 +367,9 @@ singularity-images/
 # Model checkpoints
 check*
 
+**/BayOptHparams/
+
+*.png
+*.csv
+
+taxdump.tar.gz

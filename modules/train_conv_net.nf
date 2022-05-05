@@ -1,23 +1,36 @@
-#!/usr/bin/env nextflow
 
 process ModelTraining {
-    
-    publishDir "${params.saveDir}/${directory}", mode: params.publish_dir_mode,
-                enabled: params.save
+    publishDir  "$params.saveDir",
+		        mode:       params.publish_dir_mode,
+                enabled:    params.save && !params.trainOnly
 
-    tag        "${directory}"
+    tag         "$directory"
     label       "with_gpus"
-    
+
     input:
-        tuple  val(directory), path(train)
+        path    directory
 
     output:
-        tuple  val(directories), path("model")
-        path   "*.csv"
-    
+        path    "$directory"
+
     script:
         """
-        tar -xzvf ${train}
-        train_zoonosis_model.py -t .
+        train_zoonosis_model.py -d $directory
+        """
+}
+
+process SaveModels {
+    publishDir  "$params.saveDir",
+                mode:       params.publish_dir_mode
+
+    input:
+        path    fileFolderName
+
+    output:
+        path    "$fileFolderName"
+
+    script:
+        """
+        echo 'Saving $fileFolderName'
         """
 }
