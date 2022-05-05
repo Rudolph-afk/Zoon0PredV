@@ -1,60 +1,39 @@
 nextflow.enable.dsl=2 // Required as some methods/functions may not work in main script e.g. flatten()
 
 process ChaosGameRepresentation {
-    publishDir "${params.saveDir}/${directory}/train/",
-                mode: params.publish_dir_mode, 
-                enabled: params.save,
-                pattern: "*train*.tar.gz"
-                
-    publishDir "${params.saveDir}/${directory}/test/",
-                mode: params.publish_dir_mode, 
-                enabled: params.save,
-                pattern: "*test*.tar.gz"
+    // publishDir  "$params.saveDir/$directory/",
+    //             mode:    params.publish_dir_mode,
+    //             enabled: params.save && !params.testOnly && !params.trainOnly,
+    //             saveAs:  { filename =~ /train/ ? "train/train.tar.bz2" : "test/test.tar.bz2" },
+    //             pattern: "*Data/**/*.tar.bz2"
 
-    // maxForks 3
-    label "with_cpus"
-    tag   "${directory}"
+    label       "with_cpus"
+    tag         "$directory"
 
     input:
-        // tuple val(parentDir), path(directory), path(fastaFile)
-        path directory
+        path    directory
 
     output:
-        tuple  val("${directory}"), path("*train.tar.gz") optional true
-        tuple  val("${directory}"), path("*test.tar.gz") optional true
-         // Relevant as a reference to the next process in the main script (training/testing)
-
+        path    "$directory" // optional (params.testOnly && params.trainOnly)
 
     script:
-    def fastaFile = "Sequences.fasta"
+        def train        = "$directory/train/"
+        def test         = "$directory/test/"
 
-    if (params.trainOnly) {
-        """
-        cd ${directory}/train/
-        chaos_game_representation_of_protein_sequences.R --fasta ${fastaFile} -t
-        cd ..
-        tar czvf ${directory.baseName}train.tar.gz train/
-        """
-    } else if (params.testOnly) {
-        """
-        cd ${directory}/test/
-        chaos_game_representation_of_protein_sequences.R --fasta fastaFile -t
-        cd ..
-        tar czvf ${directory.baseName}test.tar.gz test/
-        """
-    } else {
-        """
-        cd ${directory}/train/
-        chaos_game_representation_of_protein_sequences.R --fasta fastaFile -t
-        cd ..
-        tar czvf ${directory.baseName}train.tar.gz -t train/
-
-        cd test/
-        chaos_game_representation_of_protein_sequences.R --fasta fastaFile -t
-        cd ..
-        tar czvf ${directory.baseName}test.tar.gz test/
-        """
-    }
+        if (params.trainOnly) {
+            runChaos(train)
+        } else if (params.testOnly) {
+            runChaos(test)
+        } else {
+            runChaos(train) + "\ncd ../..\n" + runChaos(test)
+        }
 }
 
-// May add more features
+def runChaos(dataDir) {
+    def split = dataDir =~ /train/ ? 'train' : 'test';
+
+    """
+    cd $dataDir
+    chaos_game_representation_of_protein_sequences.R --fasta Sequences.fasta -p
+    """
+}

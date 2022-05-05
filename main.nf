@@ -1,58 +1,52 @@
-#!/usr/bin/env nextflow
+include { LoadCleanData }                   from './modules/extract_transform'
+include { ChaosGameRepresentation }         from './modules/feature_extraction'
+include { ModelTraining }                   from './modules/train_conv_net'
+include { ModelTestEval }                   from './modules/test_conv_net'
 
-include { PrepData } from './modules/extract_transform'
-include { ChaosGameRepresentation } from './modules/feature_extraction'
-include { ModelTraining } from './modules/train_conv_net'
+// Extract, Transform, Load, Train, and Test
+workflow ExTrLoadTT {
+    // Outputs directories (MetazoaData etc.), with accompanying data, as a list channel
+    LoadCleanData(
+        file(params.prot),
+        file(params.ncbiVirus),
+        file(params.eID),
+        file(params.virusDB),
+        file(params.fasta)
+        )
+    LoadCleanData.out
+                .flatten()
+                .set{ dirSplits }
 
+    ChaosGameRepresentation(dirSplits)
+    ChaosGameRepresentation.out.tap{ data }
 
-workflow ExTrLoadTT { // Extract Transform Load Train and Test
-    // Outputs directories (MetazoaData etc.) with accompanying data as a list channel
-    PrepData(
-            file(params.prot),
-            file(params.ncbiVirus), 
-            file(params.eID), 
-            file(params.virusDB), 
-            file(params.fasta)
-        ).out
-        .flatten()
-        .set{ dirSplits } 
+    ModelTraining(data)
+    ModelTraining.out.collect().set{ models }
 
-
-    ChaosGameRepresentation(dirSplits).out
-                                        .set{ data }
-    ModelTraining(data).out[0].set{ model }
-    model
-        .combine(data, by: 0)
-        .multiMap{
-            model: it -> tuple(it[0], it[1])
-            data:  it -> tuple(it[0], it[2])
-        }
-        .set{ result }
-    // ModelTesting(model, data)
+    ModelTestEval(models) // Takes directories with model and test data
 }
 
 workflow {
     if ( params.trainOnly ) {
-        Channel.fromPath(params.train_data_tarball).set{ data }
-        ModelTraining(data)
+        Channel.fromPath(params.train_data, type: "dir")
+                .set{ train }
+
+        ChaosGameRepresentation(train)
+        ChaosGameRepresentation.out.set{ data }
+
+        ModelTraining(data) // Takes directories which contain train data
+
     } else if ( params.testOnly ) {
-        // Channel.fromPath(test_data)
-        // .multiMap{
-        //     model: it -> tuple(val(it.baseName), file("${it}/model/"))
-        //     data:  it -> tuple(val(it.baseName), file("${it}/test/test.tar.gz"))
-        //     }
-        // .set{ result }
-        // ModelTesting(result.model, result.data)
+        Channel.fromPath(params.test_data, type: "dir")
+               .set{ test }
+
+        ChaosGameRepresentation(test)
+        ChaosGameRepresentation.out
+                                .collect()
+                                .set{ data }
+
+        ModelTestEval(data) // Takes directories which contain model and test data
     } else {
-        ETL_T_T()
+        ExTrLoadTT()
     }
 }
-// workflow {
-//     main:
-//         prepareData()
-
-//         // Outputs directories alongside their added models subdirectory
-//          // Saves to specified directory if params.save is true
-
-//         // Workflow is complete
-// }
