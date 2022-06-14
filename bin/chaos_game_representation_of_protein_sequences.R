@@ -31,7 +31,7 @@ parser$add_argument(
 parser$add_argument(
     '--size', '-s',
     type="integer",
-    default=128,
+    default=224,
     help="Integer - width and height of the image. Image width is equal to height (default: width=height=600)"
     )
 
@@ -83,7 +83,7 @@ names(v.seqs) = seq.names
 
 chaos_game_representation = function (x) {
     protein.sequence = str_split(x, '', simplify = TRUE)
-    chaos.obj = cgr(protein.sequence, res=300)
+    chaos.obj = cgr(protein.sequence, res=100)
     chaos.plot = with_temp_loop(
       cgr.plot(chaos.obj, mode = "matrix", corners=CORNERS.LABELS, labels=T)
       )
@@ -95,7 +95,7 @@ save_chaos_game_representation <- function (sequence, seq.name) {
     chaos.graph <- chaos_game_representation(sequence)
     with_temp_loop({
     # JPG performs better for photorealistic images, PNG for drawings with sharp lines and solid colors
-      png(file_name, width = WIDTH.HEIGHT, height = WIDTH.HEIGHT)
+      png(file_name, res=100, width=WIDTH.HEIGHT, height=WIDTH.HEIGHT)
       print(chaos.graph)
       dev.off()
       }

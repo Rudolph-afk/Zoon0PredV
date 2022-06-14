@@ -8,9 +8,9 @@ module load graphviz # required for DAG
 cd ..
 
 echo $1
-echo $2
+echo $2 $3
 
 nextflow run main.nf \
-            -profile ilifu \
-            -params-file $1 $2 # -N 4056876@myuwc.ac.za
+            -profile ilifu $4 \
+            -params-file $1 $2 $3 # -N 4056876@myuwc.ac.za
 

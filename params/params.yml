@@ -6,7 +6,5 @@ ncbiVirus              : "./data/sequences.csv"
 eID                    : "./data/virus_host_4rm_untitled.csv"
 virusDB                : "./data/virushostdb.tsv"
 fasta                  : "./data/*.fasta"
-trainOnly              : false
-testOnly               : false
-test_data              : ""
-train_data             : ""
+# data                   : "" # Path to data defat to using data produce by pipeline
+type                   : "Complete" # Choices = [TrainOnly, TestOnly, ExtractTrain, ExtractTest, TrainTest] default to running full pipeline

@@ -6,11 +6,11 @@ warnings.filterwarnings("ignore", category=UserWarning)
 ncbi = NCBITaxa()
 
 class FASTASeq:
-    
+
     """
     Creates cutomised FASTA sequence object with features specified in the init function.
     """
-    
+
     def __init__(self, entry, sequence, protein):
         """
         entry           : Protein sequence entry identifier
@@ -45,7 +45,7 @@ def getSequenceFeatures(seqObj, entry, **kwargs):
     params:
         seqObj      : Sequence object instantiated with FASTASeq()
         entry       : Protein sequence entry identifier
-        
+
         **kwargs    : either of the following keyword arguments ->
             protein     : Name of the protein
             organism    : Scientific name (i.e. genus species) of organism
@@ -74,9 +74,9 @@ def getSequenceFeatures(seqObj, entry, **kwargs):
 def read_fasta(fastaFileName):
     with open(fastaFileName, 'r') as f:
         file = f.read()
-        
+
     # >sp|O11457|VGP_EBOG4 Envelope glycoprotein OS=Zaire ebolavirus (strain Gabon-94) OX=128947 GN=GP PE=1 SV=1
-    
+
     file = file.split('>') # Divide to individual sequences
     file = list(filter(None, file)) # Remove empty spaces
 
@@ -103,7 +103,7 @@ def getRankName(idf: int, rank: str):
         rank    : Query taxonomic rank
     returns:
         organism rank  name
-    
+
     example:
     species_name = getRankName(9606, 'species')
     print(species_name)
@@ -131,14 +131,14 @@ def getRankID(idf: int, rank: str):
         rank    : Query taxonomic rank
     returns:
         organism rank identifier
-    
+
     example:
     species_idf = getRankName(9606, 'species')
     print(species_idf)
     >>> 9606
     """
     dictn = {}
-    
+
     try:
         for key, value in ncbi.get_rank(ncbi.get_lineage(idf)).items():
             dictn[value] = key
@@ -205,8 +205,8 @@ def UpdateHosts(data1, data2, data1_v_taxid, data2_v_taxid):   # updates the vir
         left_on=data1_v_taxid,
         right_on=data2_v_taxid,
         how='left')
-        
-    data1 = (data1 
+
+    data1 = (data1
                 .drop(['Virus hosts', data2_v_taxid], axis=1)
                 .rename({'Host name':'Virus hosts'}, axis=1))
     return data1
@@ -253,7 +253,7 @@ def valueChanger(x, dictn={}):
     change x to a new value if found in the dictionary
     params:
         x : x as the original value and a dictionary with old values as keys and new values as values
-    
+
     returns:
         returns new value if x is found in the dictionary and returns x if not found in the dictionary
     """
@@ -268,7 +268,7 @@ def makeList(x):
         return list(x)
     else:
         return x
-    
+
 def makeSet(x):
     if type(x) is not type(float()):
         return set(x)
@@ -332,6 +332,12 @@ def createHostNewickTree(hostList):
     tree = tree.write(features=["sci_name"])
 #     tree = Phylo.read(StringIO(tree), "newick")
     return tree
+
+def get_proof_of_concept_entries(df, virus, protein):
+    citerion = (df["Species name"].str.contains(virus) & df["Protein"].str.contains(protein))
+    max_len = df[citerion]["Length"].max()
+    result = df[citerion & (df["Length"] == max_len)].iloc[0:1, :].copy()
+    return result
 
 def save_sequences(df, fileName):
     """

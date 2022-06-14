@@ -1,8 +1,9 @@
 
 process ModelTraining {
-    publishDir  "$params.saveDir",
+    publishDir  "$params.saveDir/Results/$workflow.runName/$directory",
 		        mode:       params.publish_dir_mode,
-                enabled:    params.save && !params.trainOnly
+                enabled:    params.save,
+                pattern:    "*.csv"
 
     tag         "$directory"
     label       "with_gpus"
@@ -12,25 +13,11 @@ process ModelTraining {
 
     output:
         path    "$directory"
+        path    "*.csv"
+        // path    "$directory/model"
 
     script:
         """
         train_zoonosis_model.py -d $directory
-        """
-}
-
-process SaveModels {
-    publishDir  "$params.saveDir",
-                mode:       params.publish_dir_mode
-
-    input:
-        path    fileFolderName
-
-    output:
-        path    "$fileFolderName"
-
-    script:
-        """
-        echo 'Saving $fileFolderName'
         """
 }

@@ -2,13 +2,14 @@
 
 import argparse
 import os
+import re
 import tensorflow as tf
 # from tensorflow import keras
 from tensorflow.random import set_seed
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint, ReduceLROnPlateau #, EarlyStopping
-from tensorflow.keras.metrics import  BinaryAccuracy, FalsePositives, TruePositives, TrueNegatives, \
-                                      FalseNegatives, AUC #, Recall, Precision
+# from tensorflow.keras.metrics import  BinaryAccuracy, FalsePositives, TruePositives, TrueNegatives, \
+#                                       FalseNegatives, AUC , Recall, Precision
 import numpy as np # Needed by reduce_lr
 from numpy.random import seed
 from model_definition import Zoon0Pred_model
@@ -18,7 +19,7 @@ from model_definition import Zoon0Pred_model
 set_seed(20192020)
 seed(20192020)
 
-# Set GPU usage and memory growth
+# Set GPU usage and enable memory growth
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 for device in physical_devices:
     tf.config.experimental.set_memory_growth(device, enable=True)
@@ -26,7 +27,7 @@ for device in physical_devices:
 mirrored_strategy = tf.distribute.MirroredStrategy() # For multi gpu training
 # distributed_strategy = tf.distribute.Strategy(extended)
 
-def loadImages(train, BATCH_SIZE):
+def loadImages(train, BATCH_SIZE, TARGET_SIZE=(224,224)):
     """
     params:
         train      : directory name for training data
@@ -37,7 +38,7 @@ def loadImages(train, BATCH_SIZE):
 
     train_data_iterator = data_generator.flow_from_directory(
         train,
-        target_size=(128,128),
+        target_size=TARGET_SIZE,
         color_mode='grayscale',
         classes=['human-false', 'human-true'],
         class_mode='binary',
@@ -48,7 +49,7 @@ def loadImages(train, BATCH_SIZE):
 
     validation_data_iterator = data_generator.flow_from_directory(
         train,
-        target_size=(128,128),
+        target_size=TARGET_SIZE,
         color_mode='grayscale',
         classes=['human-false', 'human-true'],
         class_mode='binary',
@@ -88,8 +89,8 @@ def trainSaveModel(train_data_iterator, validation_data_iterator, model_checkpoi
     #     monitor='val_accuracy',
     #     patience=5
     # )
-    TRAIN_STEPS = (train_data_iterator.samples / BATCH_SIZE)
-    VALIDATION_STEPS = (validation_data_iterator.samples / BATCH_SIZE)
+    TRAIN_STEPS = int(round(train_data_iterator.samples / BATCH_SIZE))
+    VALIDATION_STEPS = int(round(validation_data_iterator.samples / BATCH_SIZE))
 
     model = Zoon0Pred_model(mirrored_strategy)
 
@@ -99,7 +100,7 @@ def trainSaveModel(train_data_iterator, validation_data_iterator, model_checkpoi
         validation_data=validation_data_iterator,
         validation_steps=VALIDATION_STEPS,
         shuffle=True,
-        epochs=100,
+        epochs=50,
         verbose=0,
         use_multiprocessing=True,
         callbacks=[
@@ -107,8 +108,8 @@ def trainSaveModel(train_data_iterator, validation_data_iterator, model_checkpoi
             model_checkpoint_callback,
             reduce_lr
             # stop_early_callback
-            ])
-
+            ]
+    )
     model.load_weights(model_checkpoint)
     tf.keras.models.save_model(model, model_name)
 
@@ -150,6 +151,10 @@ if __name__ == '__main__':
                         required=False,
                         help='Name to save model. Default: model')
 
+    parser.add_argument('-b', '--batch_size', default=None,
+                        required=False, type=int,
+                        help='Name to save model. Default: model')
+
     args = parser.parse_args()
 
     base_dir = args.baseDirectory
@@ -166,7 +171,7 @@ if __name__ == '__main__':
         model_checkpoint = args.model
 
     if (args.logs == None) & (base_dir != None):
-        logs = os.path.join(base_dir, 'trainingLogs.csv')
+        logs = f'{base_dir}_trainingLogs.csv'
     else:
         logs = args.logs
 
@@ -175,11 +180,20 @@ if __name__ == '__main__':
     else:
         model_name = args.name
 
-    directory = base_dir.split("/")[-1]
-    condition = directory == "MetazoaZoonosisData" or directory == "RNA-MetazoaZoonosisData"
-    if condition:
-        BATCH_SIZE=256
-    else:
-        BATCH_SIZE=64
+    # # Used for testing... different batch size testing
+    # if (args.batch_size == None):
+    #     BATCH_SIZE = 64
+    # else:
+    #     BATCH_SIZE = args.batch_size
 
+
+    # directory = base_dir.split("/")[-1]
+    # condition =  or directory == "RNA-MetazoaZoonosisData"
+    # if (base_dir == "Zoon0PredV"):
+    #     BATCH_SIZE=128
+    # elif (base_dir == "Metazoa") | (base_dir.__contains__("RNA")):
+    #     BATCH_SIZE=64
+    # else:
+    #     BATCH_SIZE=32
+    BATCH_SIZE=64
     main(train, model_checkpoint, logs, model_name, BATCH_SIZE=BATCH_SIZE)

@@ -373,3 +373,5 @@ check*
 *.csv
 
 taxdump.tar.gz
+
+cache/
