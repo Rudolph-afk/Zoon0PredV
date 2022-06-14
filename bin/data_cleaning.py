@@ -11,6 +11,11 @@ from imblearn.under_sampling import RandomUnderSampler
 from zoonosis_helper_functions import *
 
 if __name__ == '__main__':
+
+    #############################################################################################################################
+    #                                        CommandLine Arguments                                                              #
+    #############################################################################################################################
+
     parser = argparse.ArgumentParser(prog="%s is for zoonosis data cleaning", usage="")
 
     parser.add_argument('--uniprot', required=True, help='')
@@ -24,22 +29,19 @@ if __name__ == '__main__':
 
     os.environ["MODIN_ENGINE"] = "ray"
 
-    # Load dataset downloaded from Uniprot
-    df = pd.read_table(args.uniprot) #('../data/uniprot-keyword Virus+entry+into+host+cell+[KW-1160] +fragment no.tab.gz')
+    #############################################################################################################################
+    #                               Load dataset downloaded from Uniprot & Initial Preprocessing                                #
+    #############################################################################################################################
+
+    df = pd.read_table(args.uniprot)
 
     df['Virus hosts'] = np.where(df['Virus hosts'].isnull(), '',df['Virus hosts'])
 
     df['Virus hosts'] = df['Virus hosts'].str.split('; ').apply(set).apply('; '.join)
-    # df['Virus hosts'] = (df['Virus hosts'].swifter.progress_bar(enable=True, desc='Removing duplicate host names'))
-    # df['Virus hosts'] = (df['Virus hosts'].swifter.progress_bar(enable=True, desc='Joining host names list'))
 
     df['Protein names'] = df['Protein names'].str.split('; ').apply(set).apply('; '.join)
-    # df['Protein names'] = (df['Protein names'].swifter.progress_bar(enable=True, desc='Removing duplicate protein names').apply(set))
-    # df['Protein names'] = (df['Protein names'].swifter.progress_bar(enable=True, desc='Joining protein names list').apply('; '.join))
 
     df['Organism'] = df['Organism'].str.split('; ').apply(set).apply('; '.join)
-    # df['Organism'] = (df['Organism'].swifter.progress_bar(enable=True, desc='Removing duplicate organism names').apply(set))
-    # df['Organism'] = (df['Organism'].swifter.progress_bar(enable=True, desc='Joining organism names list').apply('; '.join))
 
     # Apply function to get species ID from organism ID
     df['Species taxonomic ID'] = (df['Taxonomic lineage IDs']
@@ -47,7 +49,7 @@ if __name__ == '__main__':
                                 #   desc='Getting Viruses taxonomic IDs')
                                 .apply(getRankID, rank='species'))
 
-    dff = df[['Entry', 'Species taxonomic ID']].copy()
+    dff = df[['Entry', 'Length', 'Species taxonomic ID']].copy()
 
     # Get the species name of the earlier unidentified taxonomic IDs
     idx_species_name = df.columns.get_loc('Taxonomic lineage (SPECIES)')
@@ -93,7 +95,7 @@ if __name__ == '__main__':
     noHostViruses = df[df['Virus hosts'].isnull()]['Species name'].unique().tolist()
 
     # Create independent dataframe of viruses with no assigned host and simltaneously identify the same viruses from the data
-    # whcih already have assigned hosts and assign host names based on those.
+    # which already have assigned hosts and assign host names based on those.
     df_na_hosts = (df[(~df['Virus hosts'].isnull()) &\
         (df['Species name']
         .isin(noHostViruses))][['Species name', 'Virus hosts']])
@@ -125,14 +127,20 @@ if __name__ == '__main__':
     # merges the updated virus hosts dataset with the dataset with viruses which have hosts
     df = df_naa.append(df_notna)
 
-    df['Virus hosts'] = np.where(df['Virus hosts'].isnull(), '',df['Virus hosts'])
+    df['Virus hosts'] = np.where(df['Virus hosts'].isnull(), '', df['Virus hosts'])
 
     df = mergeRows(df, 'Species taxonomic ID','Virus hosts')
 
     dfna = df[df['Virus hosts'] == '']
     df = df[~(df['Virus hosts'] == '')]
 
-    # Updating host names from external sources
+    #############################################################################################################################
+    #                                      Updating host names from external sources                                            #
+    #############################################################################################################################
+    #############################################################################################################################
+    #                                                       NCBI Virus                                                          #
+    #############################################################################################################################
+
     df2 = pd.read_csv(args.ncbivirusdb) #('../data/sequences.csv')
     df2.drop_duplicates(inplace=True)
 
@@ -144,13 +152,14 @@ if __name__ == '__main__':
     df2['Host name'] = df2.apply(lambda x: nameMerger(
         x['Host'], x['Host ID']),
         axis=1)
+
     # Remove Host and Host ID columns as they have been merged and are no longer needed
     df2.drop(['Host', 'Host ID'],
         axis=1, inplace=True)
 
     df2['Species ID'] = df2['Species ID'].apply(getRankID, rank='species')
 
-    dfff = df2.copy()
+    dfff = df2.copy() # For later use
 
     df_na_hosts = AggregateHosts(df2,'Species ID', 'Host name')
     dfna = dfna.merge(df_na_hosts, left_on='Species taxonomic ID', right_on='Species ID', how='left')
@@ -159,7 +168,11 @@ if __name__ == '__main__':
     df, dfna = UpdateMain(df, dfna)
     df = mergeRows(df, 'Species taxonomic ID', 'Virus hosts')
 
-    df2 = pd.read_table(args.virusdb)#('../data/virushostdb.tsv')
+    #############################################################################################################################
+    #                                                    Virus-Host DB                                                          #
+    #############################################################################################################################
+
+    df2 = pd.read_table(args.virusdb)
 
     df2 = df2[['virus tax id', 'virus name', 'host tax id', 'host name']].copy()
     df2.drop_duplicates(inplace=True)
@@ -181,7 +194,11 @@ if __name__ == '__main__':
     df, dfna = UpdateMain(df, dfna)
     df = mergeRows(df, 'Species taxonomic ID', 'Virus hosts')
 
-    df2 = pd.read_csv(args.liverpooluni) #('../data/virus_host_4rm_untitled.csv')
+    #############################################################################################################################
+    #                                                             EID2                                                          #
+    #############################################################################################################################
+
+    df2 = pd.read_csv(args.liverpooluni)
 
     df2 = df2[['Host_name', 'Host_TaxId', 'Virus_name', 'Virus_TaxId']].copy()
     df2['Species ID'] = df2['Virus_TaxId'].apply(getRankID, rank='species')
@@ -246,9 +263,12 @@ if __name__ == '__main__':
             .loc[:, df.columns]
             ).copy()
 
-    # Restructuring the data
+    #############################################################################################################################
+    #                                                  Appending Sequences                                                      #
+    #                                                Restructuring the data                                                     #
+    #############################################################################################################################
 
-    fastaFileName = args.fasta #'../data/uniprot-keyword Virus+entry+into+host+cell+[KW-1160] +fragment no.fasta'
+    fastaFileName = args.fasta
     entry_seq = read_fasta(fastaFileName)
 
     dff.sort_values(by='Entry', inplace=True)
@@ -270,7 +290,7 @@ if __name__ == '__main__':
     df['Virus hosts ID'] = df['Virus hosts ID'].apply(str)
 
     df = (df.groupby('Entry', as_index=False)
-        .agg({'Virus hosts':set, #'Protein':'first',
+        .agg({'Virus hosts':set, 'Length':'first',
                 'Infects human':'first', 'Species name':'first',
                 'Host superkingdom':set,
                 'Host kingdom':set,
@@ -280,28 +300,19 @@ if __name__ == '__main__':
                 'Sequence': 'first'}))
 
     df['Virus hosts'] = (df['Virus hosts']
-                        #  .swifter.progress_bar(enable=True,
-                        #                        desc='Joining host names list')
                         .apply('; '.join))
     df['Virus hosts ID'] = (df['Virus hosts ID']
-                            # .swifter.progress_bar(enable=True,
-                            #                       desc='Joining host IDs')
                             .apply('; '.join))
     df['Host kingdom'] = (df['Host kingdom']
-                        #   .swifter.progress_bar(enable=True,
-                        #                         desc='Joining host kingdom names')
                         .apply('; '.join))
     df['Host superkingdom'] = (df['Host superkingdom']
-                            #    .swifter.progress_bar(enable=True,
-                            #                          desc='Joining host superkingdom names')
                             .apply('; '.join))
     df['Sequence'] = df.apply(lambda x: getSequenceFeatures(
         seqObj=x['Sequence'], entry=x['Entry'],
         organism=x['Species name'], status=x['Infects human']), axis=1)
 
     df['Protein'] = df['Sequence'].apply(lambda x: x.protein_name)
-    # Append sequences to dataframe
-    # df2 = pd.read_csv('../data/sequences.csv')
+
     dfff.rename({
         'Species ID': 'Species taxonomic ID',
         'Molecule_type': 'Molecule type'},
@@ -320,15 +331,40 @@ if __name__ == '__main__':
 
     df.drop_duplicates(inplace=True)
 
-    df = df[['Entry', 'Protein', 'Species name',
+    df = df[['Entry', 'Protein', 'Length', 'Species name',
             'Species taxonomic ID', 'Species family', 'Virus hosts',
             'Virus hosts ID', 'Host kingdom',
             'Host superkingdom', 'Molecule type', 'Infects human', 'Sequence']]
 
+    #############################################################################################################################
+    #                                                   Extracting POC data                                                     #
+    #############################################################################################################################
 
-    # Split Dataframe to multiple datasets for testing
+    df['Molecule type'] = np.where(df['Molecule type'].isna(), 'unknown', df['Molecule type'])
+    # df['Molecule type'] = np.where(df['Molecule type'].isna(), '', df['Molecule type'])
 
-    df['Molecule type'] = np.where(df['Molecule type'].isna(), '', df['Molecule type'])
+    selection = {
+        "Bat coronavirus": "Spike glycoprotein", # 1395
+        "Human coronavirus 229E": "Spike glycoprotein", # 1582
+        "Human immunodeficiency virus 1": "Envelope glycoprotein gp160", # 929
+        "Influenza D virus":"Nucleoprotein" # 552
+    }
+
+    poc_df = pd.DataFrame()
+
+    for virus, protein in selection.items():
+        poc_df = pd.concat([poc_df, get_proof_of_concept_entries(df, virus, protein)])
+
+
+    # save dataframe as csv
+    poc_df.drop('Sequence', axis=1).to_csv('proof_of_concept_data.csv', index=False)
+    save_sequences(poc_df, 'Sequences')
+
+    df.drop(poc_df.index, axis=0, inplace=True)
+
+    #############################################################################################################################
+    #                                                       Data Subsetting                                                     #
+    #############################################################################################################################
 
     unfiltered = df
 
@@ -348,19 +384,24 @@ if __name__ == '__main__':
 
     RNA_MetazoaZoonosis = metazoa[metazoa['Molecule type'].str.contains('RNA')].copy()
 
-    metazoaFile = 'MetazoaZoonosis'
-    plant_humanFile = 'Plant-HumanZoonosis'
-    unfilteredFile = 'Zoonosis'
+    metazoaFile = 'Metazoa'
+    plant_humanFile = 'Plant-Human'
+    unfilteredFile = 'Zoon0PredV'
     NonEukaryote_HumanFile = 'NonEukaryote-Human'
-    DNA_metazoaFile = 'DNA-MetazoaZoonosis'
-    RNA_metazoaFile = 'RNA-MetazoaZoonosis'
+    DNA_metazoaFile = 'DNA-Metazoa'
+    RNA_metazoaFile = 'RNA-Metazoa'
 
-    # Write file sequences to fasta for feature extraction
+    #############################################################################################################################
+    #                                                        Undersampling                                                      #
+    #                                                    Saving data and sequences                                              #
+    #                                                       Train Test Splitting                                                #
+    #############################################################################################################################
+
 
     dirs = [
-        'MetazoaZoonosisData','ZoonosisData',
-        'Plant-HumanZoonosisData', 'NonEukaryote-HumanData',
-        'DNA-MetazoaZoonosisData', 'RNA-MetazoaZoonosisData']
+        'Metazoa','Zoon0PredV',
+        'Plant-Human', 'NonEukaryote-Human',
+        'DNA-Metazoa', 'RNA-Metazoa']
 
     for dir in dirs:
         if not os.path.isdir(dir):
@@ -377,10 +418,9 @@ if __name__ == '__main__':
         DNA_MetazoaZoonosis, RNA_MetazoaZoonosis]
 
     # Resample data
-
     # Undersample majority class such that minority class (human-false) is 60% of the majority class (human-true317316)
     seed = 960505
-    rus = RandomUnderSampler(sampling_strategy=1., random_state=seed)
+    rus = RandomUnderSampler(sampling_strategy=0.67, random_state=seed)
     sampled_dataframes = []
     for dt in dataframes:
         clas = dt['Infects human']
@@ -397,8 +437,6 @@ if __name__ == '__main__':
        # Create subdirectories
         os.makedirs(os.path.join(folder, 'train'), exist_ok=True)
         os.makedirs(os.path.join(folder, 'test'), exist_ok=True)
-        # os.makedirs(os.path.join(folder, 'train/human-false'), exist_ok=True)
-        # os.makedirs(os.path.join(folder, 'test/human-false'), exist_ok=True)
        # Split data to train and test data
         train, test = train_test_split(dff, test_size=0.2, random_state=seed) # Will further split 15% of train as validation during training
        # Save test and train sequences

@@ -1,6 +1,5 @@
-save                : false
+save                : true
 saveDir             : "/scratch2/users/rserage/"
 publish_dir_mode    : "copy"
-trainOnly           : true
-testOnly            : false
-train_data          : "/scratch2/users/rserage/Zoonosis*"
+data                : "/scratch2/users/rserage/ZoonosisOne2One"
+type                : "TrainOnly"

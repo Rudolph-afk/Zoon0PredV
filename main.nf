@@ -1,52 +1,41 @@
-include { LoadCleanData }                   from './modules/extract_transform'
-include { ChaosGameRepresentation }         from './modules/feature_extraction'
+include { HyperParameterSearch }            from './modules/hyperparameter_search'
 include { ModelTraining }                   from './modules/train_conv_net'
 include { ModelTestEval }                   from './modules/test_conv_net'
+include { ChaosTrain }                      from './workflows/training_with_chaos'
+include { ChaosTestEval }                   from './workflows/testing_with_chaos'
+include { Main }                            from './workflows/extract_transfor_train_test'
 
-// Extract, Transform, Load, Train, and Test
-workflow ExTrLoadTT {
-    // Outputs directories (MetazoaData etc.), with accompanying data, as a list channel
-    LoadCleanData(
-        file(params.prot),
-        file(params.ncbiVirus),
-        file(params.eID),
-        file(params.virusDB),
-        file(params.fasta)
+if (params.type != "Complete") {
+    Channel.fromPath(
+        params.data,
+        type: "dir"
         )
-    LoadCleanData.out
-                .flatten()
-                .set{ dirSplits }
-
-    ChaosGameRepresentation(dirSplits)
-    ChaosGameRepresentation.out.tap{ data }
-
-    ModelTraining(data)
-    ModelTraining.out.collect().set{ models }
-
-    ModelTestEval(models) // Takes directories with model and test data
+        .set{ data }
 }
 
 workflow {
-    if ( params.trainOnly ) {
-        Channel.fromPath(params.train_data, type: "dir")
-                .set{ train }
-
-        ChaosGameRepresentation(train)
-        ChaosGameRepresentation.out.set{ data }
-
-        ModelTraining(data) // Takes directories which contain train data
-
-    } else if ( params.testOnly ) {
-        Channel.fromPath(params.test_data, type: "dir")
-               .set{ test }
-
-        ChaosGameRepresentation(test)
-        ChaosGameRepresentation.out
-                                .collect()
-                                .set{ data }
-
-        ModelTestEval(data) // Takes directories which contain model and test data
-    } else {
-        ExTrLoadTT()
+    switch (params.type) {
+        case "GetBestParams":
+            HyperParameterSearch(data)
+            break;
+        case "TrainOnly":
+            ModelTraining(data)
+	        break;
+        case "TestOnly":
+            ModelTestEval(data.collect())
+	        break;
+        case "ExtractTrain":
+            ChaosTrain()
+	        break;
+        case "ExtractTest":
+            ChaosTestEval()
+	        break;
+        case "TrainTest":
+            ModelTraining(data)
+            ModelTestEval(ModelTraining.out.collect())
+	        break;
+        case "Complete":
+            Main()
+	        break;
     }
 }
