@@ -5,11 +5,11 @@ import argparse
 from tensorflow import keras
 from tensorflow.keras.preprocessing.image import load_img
 # from tensorflow.keras.metrics import  BinaryAccuracy
-from tf_keras_vis.utils.model_modifiers import ReplaceToLinear
-from tf_keras_vis.utils.scores import BinaryScore
-from tf_keras_vis.gradcam_plus_plus import GradcamPlusPlus
-from tf_keras_vis.saliency import Saliency
-from tf_keras_vis.scorecam import Scorecam
+# from tf_keras_vis.utils.model_modifiers import ReplaceToLinear
+# from tf_keras_vis.utils.scores import BinaryScore
+# from tf_keras_vis.gradcam_plus_plus import GradcamPlusPlus
+# from tf_keras_vis.saliency import Saliency
+# from tf_keras_vis.scorecam import Scorecam
 from matplotlib import cm
 from matplotlib.gridspec import GridSpec
 import matplotlib.pyplot as plt

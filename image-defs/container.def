@@ -1,23 +1,29 @@
 Bootstrap: docker
 From: tensorflow/tensorflow:2.6.0-gpu
 
+%environment
+    export TZ=Africa/Johannesburg
 %post
+    # Mount issue see [https://github.com/apptainer/singularity/issues/5465#issuecomment-667067920]
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
     apt-get update && apt-get upgrade -y
-    apt-get -y install python-numpy python-qt4 python-lxml python-six graphviz python3-opencv
+    apt-get -y install python-numpy python-qt4 python-lxml python-six graphviz python3-opencv git
     python -m pip install -U pip
     pip install pandas
     pip install matplotlib
     pip install seaborn
     pip install scikit-learn
     pip install ete3
-    pip install mlxtend
+    # pip install mlxtend
     pip install tqdm
     pip install swifter
     pip install biopython
     pip install imbalanced-learn
     # pip install tensorflow-addons==0.14.0
-    pip install keras-tuner --upgrade
+    # pip install keras-tuner --upgrade
     pip install tf-keras-vis
     pip install pydot
     pip install opencv-python
-    pip install hiplot
+    # pip install hiplot
+    pip install git+https://github.com/albermax/innvestigate.git@aff4c70bb1098c90838c2bf61a6c131f2d942e5a
