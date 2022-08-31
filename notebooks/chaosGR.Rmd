@@ -16,8 +16,9 @@ suppressPackageStartupMessages(c(
   library(tictoc), # benchmarking code
   library(foreach), # For parallel computing
   library(doParallel), # Registration of workers for parallel computing
-  library(stringr)) # For manipulation of strings, especially names of the sequences
-)
+  library(stringr), # For manipulation of strings, especially names of the sequences
+  library(flextable),)
+  )
 ```
 
 ## Fasta Sequences
@@ -65,7 +66,7 @@ seq.names[1:2]
 ## Zoonosis dataframe
 
 ```{r}
-(suppressMessages({zd <- read_csv("ZoonosisData.csv.gz")}))
+(suppressMessages({zd <- read_csv("Zoon0PredVData.csv.gz")}))
 ```
 
 ## Define CGR function
@@ -165,6 +166,26 @@ toc(log = T)
 rm human-false/* human-true/*
 ```
 
+## Normal CGR
+
+```{r}
+loop = global_loop()
+tic("Chaos - Async", format = T)
+with_loop(
+  loop,
+  mcmapply(
+    save_chaos_game_representation,
+    sequence = virus_sequences[1:10000],
+    seq.name = seq.names[1:10000],
+    mc.cores = cores
+    )
+  )
+toc(log = T)
+```
+
+```{bash}
+rm human-false/* human-true/*
+```
 
 
 
