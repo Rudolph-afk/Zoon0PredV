@@ -33,3 +33,4 @@ nextflow run Rudolph-afk/Zoon0PredV -params-file params/params.yml -dsl2
 | **[main.nf](main.nf/)**                 | Main script                                                     |
 | **[nextflow.config](nextflow.config/)** | Main Nextflow configuration file                                |
 
+This project is part of a MSc thesis entitled _A DEEP LEARNING APPROACH TO PREDICTING POTENTIAL VIRUS SPECIES CROSSOVER USING CONVOLUTIONAL NEURAL NETWORKS AND VIRAL PROTEIN SEQUENCE PATTERNS_ submittted to the University of the Western Cape.
