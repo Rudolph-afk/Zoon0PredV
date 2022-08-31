@@ -1,0 +1,5 @@
+save                   : true
+saveDir                : "/scratch2/users/rserage/"
+publish_dir_mode       : "copy"
+data                   : "/scratch2/users/rserage/ZoonosisOne2One/"
+type                   : "GetBestParams"

@@ -1,0 +1,10 @@
+save                   : false
+saveDir                : "/scratch2/users/rserage/"
+publish_dir_mode       : "copy"
+# prot                   : "./data/*.tab.gz"
+# ncbiVirus              : "./data/sequences.csv"
+# eID                    : "./data/virus_host_4rm_untitled.csv"
+# virusDB                : "./data/virushostdb.tsv"
+# fasta                  : "./data/*.fasta"
+data                   : "/scratch2/users/rserage/*Data/"
+type                   : "TrainTest"
