@@ -7,3 +7,5 @@ data/*.tsv filter=lfs diff=lfs merge=lfs -text
 data/*.csv filter=lfs diff=lfs merge=lfs -text
 data/*.fasta filter=lfs diff=lfs merge=lfs -text
 data/* filter=lfs diff=lfs merge=lfs -text
+*.data-00000-of-00001 filter=lfs diff=lfs merge=lfs -text
+data/SpeciesInteractions_EID2.csv filter=lfs diff=lfs merge=lfs -text
