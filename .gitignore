@@ -370,7 +370,6 @@ check*
 **/BayOptHparams/
 
 *.png
-*.csv
 
 taxdump.tar.gz
 
